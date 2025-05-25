@@ -35,7 +35,7 @@ class ActivityService {
   static async getActivities(filters = {}) {
     try {
       const query = this.buildQuery(filters);
-      console.log(query);
+      logger.debug(query);
       const activities = await Activity.find(query).sort({ date: 1, time: 1 });
 
       logger.debug(`Retrieved ${activities.length} activities with filters:`, filters);
@@ -56,24 +56,25 @@ class ActivityService {
     }
 
     if (status) {
-      switch (status) {
-        case 'upcoming':
-          query.completed = false;
-          query.cancelled = false;
-          query.date = { $gte: new Date().toISOString().split('T')[0] };
-          break;
-        case 'completed':
-          query.completed = true;
-          break;
-        case 'cancelled':
-          query.cancelled = true;
-          break;
-        case 'past-due':
-          query.completed = false;
-          query.cancelled = false;
-          query.date = { $lt: new Date().toISOString().split('T')[0] };
-          break;
-      }
+      const STATUS_QUERIES = {
+        'upcoming': {
+          completed: false,
+          cancelled: false,
+          date: { $gte: new Date().toISOString().split('T')[0] }
+        },
+        'completed': {
+          completed: true
+        },
+        'cancelled': {
+          cancelled: true
+        },
+        'past-due': {
+          completed: false,
+          cancelled: false,
+          date: { $lt: new Date().toISOString().split('T')[0] }
+        }
+      };
+      Object.assign(query, STATUS_QUERIES[status]);
     }
 
     if (startDate && endDate) {

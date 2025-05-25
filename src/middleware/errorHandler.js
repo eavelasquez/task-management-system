@@ -1,6 +1,8 @@
+const logger = require('../utils/logger');
+
 // Error handling middleware
-const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
+const errorHandler = (err, _, res) => {
+  logger.error(err.stack);
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {

@@ -1,6 +1,7 @@
 const ActivityService = require('../services/activityService');
 const Activity = require('../models/Activity');
 const { validationResult } = require('express-validator');
+const logger = require('../utils/logger');
 
 // Get all activities with optional filters
 exports.getActivities = async (req, res) => {
@@ -8,7 +9,8 @@ exports.getActivities = async (req, res) => {
     const activities = await ActivityService.getActivities(req.query);
     res.json(activities);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    logger.error('Error fetching activities:', error);
+    res.status(500).json({ error: 'Failed to fetch activities' });
   }
 };
 
@@ -24,7 +26,7 @@ exports.getActivityById = async (req, res) => {
 
     res.json(activity);
   } catch (error) {
-    console.error('Error fetching activity:', error);
+    logger.error('Error fetching activity:', error);
     res.status(500).json({ error: 'Failed to fetch activity' });
   }
 };
@@ -120,7 +122,7 @@ exports.syncActivities = async (req, res) => {
     const updatedActivities = await Activity.find().sort({ date: 1, time: 1 });
     res.json(updatedActivities);
   } catch (error) {
-    console.error('Error syncing activities:', error);
+    logger.error('Error syncing activities:', error);
     res.status(500).json({ error: 'Failed to sync activities' });
   }
 };
@@ -142,7 +144,7 @@ exports.completeActivity = async (req, res) => {
     await activity.complete();
     res.json(activity);
   } catch (error) {
-    console.error('Error completing activity:', error);
+    logger.error('Error completing activity:', error);
     res.status(500).json({ error: 'Failed to complete activity' });
   }
 };
@@ -164,7 +166,7 @@ exports.cancelActivity = async (req, res) => {
     await activity.cancel();
     res.json(activity);
   } catch (error) {
-    console.error('Error cancelling activity:', error);
+    logger.error('Error cancelling activity:', error);
     res.status(500).json({ error: 'Failed to cancel activity' });
   }
 };
@@ -176,7 +178,7 @@ exports.getMentors = async (req, res) => {
     const mentors = [...new Set(mentoringSessions.map(session => session.mentor).filter(Boolean))];
     res.json(mentors);
   } catch (error) {
-    console.error('Error fetching mentors:', error);
+    logger.error('Error fetching mentors:', error);
     res.status(500).json({ error: 'Failed to fetch mentors' });
   }
 };
@@ -188,7 +190,7 @@ exports.getStatistics = async (req, res) => {
     const stats = await Activity.getStatistics(startDate, endDate);
     res.json(stats);
   } catch (error) {
-    console.error('Error fetching statistics:', error);
+    logger.error('Error fetching statistics:', error);
     res.status(500).json({ error: 'Failed to fetch statistics' });
   }
 };
@@ -200,7 +202,7 @@ exports.getUpcomingActivities = async (req, res) => {
     const activities = await Activity.findUpcoming().limit(parseInt(limit));
     res.json(activities);
   } catch (error) {
-    console.error('Error fetching upcoming activities:', error);
+    logger.error('Error fetching upcoming activities:', error);
     res.status(500).json({ error: 'Failed to fetch upcoming activities' });
   }
 };
@@ -212,7 +214,7 @@ exports.getRecentActivities = async (req, res) => {
     const activities = await Activity.findCompleted().limit(parseInt(limit));
     res.json(activities);
   } catch (error) {
-    console.error('Error fetching recent activities:', error);
+    logger.error('Error fetching recent activities:', error);
     res.status(500).json({ error: 'Failed to fetch recent activities' });
   }
 }; 
