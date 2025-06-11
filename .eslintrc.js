@@ -25,6 +25,7 @@ module.exports = {
     'logs/',
     '*.min.js',
     'src/public/',
+    'healthcheck.js',
   ],
   overrides: [
     {
