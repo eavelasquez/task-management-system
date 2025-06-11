@@ -6,11 +6,8 @@ export const ChartRenderer = {
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // Get stats from activity list
     const stats = ActivityList.getInstance().getStats(startDate, endDate)
 
-    // For a real implementation, you would use a charting library like Chart.js
-    // This is a placeholder implementation
     container.innerHTML = `
       <div class="placeholder-chart">
         <div>Activity Distribution</div>
@@ -22,12 +19,10 @@ export const ChartRenderer = {
   },
 
   // Render participant growth chart
-  renderParticipantGrowth(containerId, startDate = null, endDate = null) {
+  renderParticipantGrowth(containerId, _startDate = null, _endDate = null) {
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // For a real implementation, you would use a charting library like Chart.js
-    // This is a placeholder implementation
     container.innerHTML = `
       <div class="placeholder-chart">
         <div>Participant Growth</div>
@@ -41,11 +36,8 @@ export const ChartRenderer = {
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // Get stats from activity list
     const stats = ActivityList.getInstance().getStats(startDate, endDate)
 
-    // For a real implementation, you would use a charting library like Chart.js
-    // This is a placeholder implementation
     container.innerHTML = `
       <div class="placeholder-chart">
         <div>Completion Rates</div>
