@@ -26,7 +26,10 @@ jobs:
     
     - name: Install dependencies
       run: npm install
-    
+
+    - name: Run lint and format
+      run: npm run lint && npm run format:check
+  
     - name: Run tests
       run: npm test
       env:
