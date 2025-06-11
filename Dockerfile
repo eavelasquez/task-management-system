@@ -6,7 +6,7 @@ RUN apk add --no-cache dumb-init
 
 # Create app directory and user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S appuser -u 1001
 
 WORKDIR /app
 
@@ -21,8 +21,8 @@ RUN npm ci --only=production && npm cache clean --force
 FROM base AS dev
 RUN npm ci
 COPY . .
-RUN mkdir -p logs && chown nextjs:nodejs logs
-USER nextjs
+RUN mkdir -p logs && chown appuser:nodejs logs
+USER appuser
 EXPOSE 3000
 CMD ["dumb-init", "node", "src/server.js"]
 
@@ -44,20 +44,20 @@ ENV NODE_ENV=${NODE_ENV}
 ENV PORT=${PORT}
 
 # Copy dependencies from deps stage
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=appuser:nodejs /app/node_modules ./node_modules
 
 # Copy application code
-COPY --chown=nextjs:nodejs . .
+COPY --chown=appuser:nodejs . .
 
 # Create logs directory with proper permissions
-RUN mkdir -p logs && chown nextjs:nodejs logs
+RUN mkdir -p logs && chown appuser:nodejs logs
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node healthcheck.js
 
 # Use non-root user
-USER nextjs
+USER appuser
 
 # Expose port
 EXPOSE ${PORT}
