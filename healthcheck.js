@@ -1,10 +1,10 @@
-const http = require('http');
+const http = require("http");
 
 const options = {
-  host: 'localhost',
+  host: "localhost",
   port: process.env.PORT || 3000,
-  path: '/health',
-  timeout: 2000
+  path: "/health",
+  timeout: 2000,
 };
 
 const request = http.request(options, (res) => {
@@ -12,15 +12,15 @@ const request = http.request(options, (res) => {
   process.exit(res.statusCode === 200 ? 0 : 1);
 });
 
-request.on('error', (err) => {
-  console.error('Health check failed:', err.message);
+request.on("error", (err) => {
+  console.error("Health check failed:", err.message);
   process.exit(1);
 });
 
-request.on('timeout', () => {
-  console.error('Health check timed out');
+request.on("timeout", () => {
+  console.error("Health check timed out");
   request.destroy();
   process.exit(1);
 });
 
-request.end(); 
+request.end();

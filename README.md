@@ -36,11 +36,13 @@ src/
 ## 🚀 Features
 
 ### Activity Management
+
 - **Workshops**: Manage educational sessions with presenters and materials
 - **Mentoring**: Track mentor-mentee relationships and focus areas
 - **Networking**: Organize networking events with different formats
 
 ### Core Functionality
+
 - ✅ Create, read, update, delete activities
 - ✅ Complete and cancel activities
 - ✅ Filter activities by type, status, date range
@@ -52,6 +54,7 @@ src/
 ### API Endpoints
 
 #### Activities
+
 - `GET /api/activities` - Get all activities with optional filters
 - `GET /api/activities/upcoming` - Get upcoming activities
 - `GET /api/activities/recent` - Get recently completed activities
@@ -64,6 +67,7 @@ src/
 - `POST /api/activities/:id/cancel` - Cancel activity
 
 #### Additional Endpoints
+
 - `GET /api/mentors` - Get list of mentors
 - `GET /api/statistics` - Get activity statistics
 - `GET /health` - Health check endpoint
@@ -71,6 +75,7 @@ src/
 ## 🛠️ Installation
 
 ### Prerequisites
+
 - Node.js >= 22.16.0
 - MongoDB >= 7.0.0
 - npm >= 11.4.1
@@ -78,18 +83,21 @@ src/
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd task-management-system
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment Configuration**
    Create a `.env` file in the root directory:
+
    ```env
    # Server Configuration
    PORT=3000
@@ -103,11 +111,13 @@ src/
    ```
 
 4. **Create logs directory**
+
    ```bash
    npm run logs
    ```
 
 5. **Start the application**
+
    ```bash
    # Development mode with auto-reload
    npm run dev
@@ -123,26 +133,31 @@ src/
 #### Backend Components
 
 **Models (`src/models/`)**
+
 - Define database schemas and business logic
 - Include virtual properties, instance methods, and static methods
 - Handle data validation and relationships
 
 **Controllers (`src/controllers/`)**
+
 - Handle HTTP requests and responses
 - Validate input data
 - Coordinate between services and routes
 
 **Services (`src/services/`)**
+
 - Contain business logic
 - Handle complex operations and data processing
 - Provide reusable functionality across controllers
 
 **Routes (`src/routes/`)**
+
 - Define API endpoints
 - Apply middleware and validation
 - Connect HTTP methods to controller functions
 
 **Middleware (`src/middleware/`)**
+
 - Handle cross-cutting concerns
 - Error handling and logging
 - Request validation and authentication
@@ -150,16 +165,19 @@ src/
 #### Frontend Components
 
 **Classes (`src/public/js/webapp/classes.js`)**
+
 - Activity and ActivityList classes
 - Local data management
 - Business logic for frontend operations
 
 **API Service (`src/public/js/webapp/api-service.js`)**
+
 - HTTP client for backend communication
 - Handles all API calls
 - Error handling and data transformation
 
 **Command Pattern (`src/public/js/webapp/command.js`)**
+
 - Implements command pattern for actions
 - Undo/redo functionality
 - Encapsulates user operations
@@ -184,6 +202,7 @@ src/
 ## 📊 Database Schema
 
 ### Activity Model
+
 ```javascript
 {
   id: String (unique),
@@ -198,16 +217,16 @@ src/
   cancelled: Boolean,
   createdAt: String,
   completedDate: String,
-  
+
   // Workshop specific
   presenter: String,
   materials: String,
-  
+
   // Mentoring specific
   mentor: String,
   mentee: String,
   focus: String,
-  
+
   // Networking specific
   format: String,
   partners: String
@@ -228,6 +247,7 @@ Log levels: `error`, `warn`, `info`, `http`, `debug`
 ## 🚀 Deployment
 
 ### Docker Support
+
 ```bash
 # Build image
 docker build -t task-management-system .
@@ -237,11 +257,13 @@ docker run -p 3000:3000 task-management-system
 ```
 
 ### Docker Compose
+
 ```bash
 docker-compose up -d
 ```
 
 ### Environment Variables for Production
+
 ```env
 NODE_ENV=production
 PORT=3000
@@ -277,7 +299,8 @@ npm run lint
 ## 🆘 Support
 
 For support and questions:
+
 - Check the logs in `logs/` directory
 - Use the health check endpoint: `GET /health`
 - Review the API documentation above
-- Check MongoDB connection status 
+- Check MongoDB connection status
