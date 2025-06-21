@@ -5,34 +5,52 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    'eslint:recommended',
-  ],
+  extends: ["eslint:recommended", "prettier"],
+  plugins: ["prettier"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   rules: {
-    'indent': ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'quotes': ['error', 'single'],
-    'semi': ['error', 'always'],
-    'no-unused-vars': ['warn'],
-    'no-console': ['warn'],
+    "prettier/prettier": "error",
+    "no-unused-vars": ["warn"],
+    "no-console": ["warn"],
+    "no-debugger": "warn",
+    "no-duplicate-imports": "error",
+    "no-unused-expressions": "error",
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-process-exit": "warn",
+    "handle-callback-err": "error",
   },
   ignorePatterns: [
-    'node_modules/',
-    'logs/',
-    '*.min.js',
-    'src/public/',
-    'healthcheck.js',
+    "node_modules/",
+    "logs/",
+    "*.min.js",
+    "src/public/",
+    "healthcheck.js",
   ],
   overrides: [
     {
-      files: ['src/config/**/*.js', 'src/controllers/**/*.js', 'src/middleware/**/*.js', 'src/services/**/*.js'],
+      files: [
+        "src/config/**/*.js",
+        "src/controllers/**/*.js",
+        "src/middleware/**/*.js",
+        "src/services/**/*.js",
+      ],
       parserOptions: {
-        sourceType: 'script',
+        sourceType: "script",
+      },
+    },
+    {
+      files: ["src/public/js/**/*.js"],
+      env: {
+        browser: true,
+        es2021: true,
+      },
+      parserOptions: {
+        sourceType: "module",
       },
     },
   ],
-}; 
+};
