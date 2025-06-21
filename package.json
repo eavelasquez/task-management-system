@@ -16,7 +16,7 @@
     "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
     "format:staged": "prettier --write",
-    "prepare": "husky install",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
     "logs": "mkdir -p logs"
   },
   "keywords": [
