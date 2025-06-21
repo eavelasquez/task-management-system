@@ -1,6 +1,9 @@
 language: node_js
 node_js:
   - "18"
+  - "20"
+  - "22"
+  - "24"
 
 services:
   - docker
