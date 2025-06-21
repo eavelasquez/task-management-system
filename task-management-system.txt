@@ -1,0 +1,5115 @@
+Directory structure:
+└── eavelasquez-task-management-system/
+    ├── README.md
+    ├── docker-compose.yml
+    ├── Dockerfile
+    ├── healthcheck.js
+    ├── package.json
+    ├── .dockerignore
+    ├── .env.example
+    ├── .eslintrc.js
+    ├── .prettierignore
+    ├── .prettierrc.js
+    ├── src/
+    │   ├── app.js
+    │   ├── server.js
+    │   ├── config/
+    │   │   └── database.js
+    │   ├── controllers/
+    │   │   └── activityController.js
+    │   ├── middleware/
+    │   │   └── errorHandler.js
+    │   ├── models/
+    │   │   └── Activity.js
+    │   ├── public/
+    │   │   ├── index.html
+    │   │   ├── css/
+    │   │   │   └── styles.css
+    │   │   └── js/
+    │   │       ├── app.js
+    │   │       └── webapp/
+    │   │           ├── api-service.js
+    │   │           ├── chart-renderer.js
+    │   │           ├── classes.js
+    │   │           ├── command.js
+    │   │           ├── memento.js
+    │   │           ├── mixins.js
+    │   │           └── storage.js
+    │   ├── routes/
+    │   │   └── activityRoutes.js
+    │   ├── services/
+    │   │   └── activityService.js
+    │   └── utils/
+    │       └── logger.js
+    ├── .github/
+    │   └── workflows/
+    │       └── ci-cd.yml
+    └── .husky/
+        └── pre-commit
+
+================================================
+FILE: README.md
+================================================
+# Task Management System
+
+A comprehensive task management system for activities, workshops, mentoring
+sessions, and networking events. Built with Node.js, Express, MongoDB, and
+vanilla JavaScript frontend.
+
+![Opengraph Image](src/public/img/opengraph-image.png)
+
+## 🏗️ Architecture
+
+This application follows a **monolithic architecture** with clear separation of
+concerns:
+
+```
+src/
+├── config/          # Configuration files
+│   └── database.js  # Database connection setup
+├── controllers/     # Request handlers
+│   └── activityController.js
+├── models/          # Database models
+│   └── Activity.js
+├── routes/          # API route definitions
+│   └── activityRoutes.js
+├── services/        # Business logic layer
+│   └── activityService.js
+├── middleware/      # Custom middleware
+│   └── errorHandler.js
+├── utils/           # Utility functions
+│   └── logger.js
+├── public/          # Frontend assets
+│   ├── assets/      # Images, icons, etc.
+│   ├── js/          # JavaScript files
+│   ├── css/         # Stylesheets
+│   └── index.html   # Main HTML file
+├── app.js           # Express app configuration
+└── server.js        # Server entry point
+```
+
+## 🚀 Features
+
+### Activity Management
+
+- **Workshops**: Manage educational sessions with presenters and materials
+- **Mentoring**: Track mentor-mentee relationships and focus areas
+- **Networking**: Organize networking events with different formats
+
+### Core Functionality
+
+- ✅ Create, read, update, delete activities
+- ✅ Complete and cancel activities
+- ✅ Filter activities by type, status, date range
+- ✅ Real-time synchronization with database
+- ✅ Dashboard with upcoming and recent activities
+- ✅ Statistics and analytics
+- ✅ Responsive web interface
+
+### API Endpoints
+
+#### Activities
+
+- `GET /api/activities` - Get all activities with optional filters
+- `GET /api/activities/upcoming` - Get upcoming activities
+- `GET /api/activities/recent` - Get recently completed activities
+- `GET /api/activities/:id` - Get specific activity
+- `POST /api/activities` - Create new activity
+- `PUT /api/activities/:id` - Update activity
+- `DELETE /api/activities/:id` - Delete activity
+- `POST /api/activities/sync` - Bulk sync activities
+- `POST /api/activities/:id/complete` - Mark activity as completed
+- `POST /api/activities/:id/cancel` - Cancel activity
+
+#### Additional Endpoints
+
+- `GET /api/mentors` - Get list of mentors
+- `GET /api/statistics` - Get activity statistics
+- `GET /health` - Health check endpoint
+
+## 🛠️ Installation
+
+### Prerequisites
+
+- Node.js >= 18.0.0
+- MongoDB >= 7.0.0
+- npm >= 9.0.0
+
+### Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd task-management-system
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Environment Configuration** Create a `.env` file in the root directory:
+
+   ```env
+   # Server Configuration
+   PORT=3000
+   NODE_ENV=development
+
+   # Database Configuration
+   MONGODB_URI=mongodb://localhost:27017/task-management-system
+
+   # CORS Configuration
+   CORS_ORIGIN=http://localhost:3000
+   ```
+
+4. **Create logs directory**
+
+   ```bash
+   npm run logs
+   ```
+
+5. **Start the application**
+
+   ```bash
+   # Development mode with auto-reload
+   npm run dev
+
+   # Production mode
+   npm start
+   ```
+
+## 🔧 Development
+
+### Project Structure Explained
+
+#### Backend Components
+
+**Models (`src/models/`)**
+
+- Define database schemas and business logic
+- Include virtual properties, instance methods, and static methods
+- Handle data validation and relationships
+
+**Controllers (`src/controllers/`)**
+
+- Handle HTTP requests and responses
+- Validate input data
+- Coordinate between services and routes
+
+**Services (`src/services/`)**
+
+- Contain business logic
+- Handle complex operations and data processing
+- Provide reusable functionality across controllers
+
+**Routes (`src/routes/`)**
+
+- Define API endpoints
+- Apply middleware and validation
+- Connect HTTP methods to controller functions
+
+**Middleware (`src/middleware/`)**
+
+- Handle cross-cutting concerns
+- Error handling and logging
+- Request validation and authentication
+
+#### Frontend Components
+
+**Classes (`src/public/js/webapp/classes.js`)**
+
+- Activity and ActivityList classes
+- Local data management
+- Business logic for frontend operations
+
+**API Service (`src/public/js/webapp/api-service.js`)**
+
+- HTTP client for backend communication
+- Handles all API calls
+- Error handling and data transformation
+
+**Command Pattern (`src/public/js/webapp/command.js`)**
+
+- Implements command pattern for actions
+- Undo/redo functionality
+- Encapsulates user operations
+
+### Key Design Patterns
+
+1. **MVC Architecture**: Clear separation between Models, Views, and Controllers
+2. **Service Layer**: Business logic abstraction
+3. **Repository Pattern**: Data access abstraction through Mongoose models
+4. **Command Pattern**: Frontend action management
+5. **Singleton Pattern**: Activity list management
+6. **Observer Pattern**: Event-driven UI updates
+
+### API Design Principles
+
+- **RESTful**: Following REST conventions for resource management
+- **Stateless**: Each request contains all necessary information
+- **Consistent**: Uniform response formats and error handling
+- **Validated**: Input validation on all endpoints
+- **Documented**: Clear endpoint documentation and examples
+
+## 📊 Database Schema
+
+### Activity Model
+
+```javascript
+{
+  id: String (unique),
+  type: String (workshop|mentoring|networking),
+  title: String,
+  date: String,
+  time: String,
+  description: String,
+  location: String,
+  capacity: Number,
+  completed: Boolean,
+  cancelled: Boolean,
+  createdAt: String,
+  completedDate: String,
+
+  // Workshop specific
+  presenter: String,
+  materials: String,
+
+  // Mentoring specific
+  mentor: String,
+  mentee: String,
+  focus: String,
+
+  // Networking specific
+  format: String,
+  partners: String
+}
+```
+
+## 🔍 Monitoring and Logging
+
+The application includes comprehensive logging using Winston:
+
+- **Console Logging**: Development-friendly colored output
+- **File Logging**: Persistent logs in `logs/` directory
+- **Error Tracking**: Separate error log file
+- **HTTP Logging**: Request/response logging with Morgan
+
+Log levels: `error`, `warn`, `info`, `http`, `debug`
+
+## 🚀 Deployment
+
+### Docker Support
+
+```bash
+# Build image
+docker build -t task-management-system .
+
+# Run container
+docker run -p 3000:3000 task-management-system
+```
+
+### Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+### Environment Variables for Production
+
+```env
+NODE_ENV=production
+PORT=3000
+MONGODB_URI=mongodb://mongo:27017/task-management-system
+CORS_ORIGIN=https://yourdomain.com
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run linting
+npm run lint
+```
+
+## 🎨 Code Formatting
+
+This project uses **Prettier** for consistent code formatting and **ESLint** for
+code quality.
+
+### Quick Start
+
+```bash
+# Format all files
+npm run format
+
+# Check formatting (used in CI)
+npm run format:check
+
+# Fix linting issues
+npm run lint:fix
+```
+
+### Pre-commit Hooks
+
+Automatic formatting and linting on commit via Husky:
+
+- ESLint fixes auto-fixable issues
+- Prettier formats staged files
+- Commit fails if there are unfixable issues
+
+## 📈 Performance Considerations
+
+- **Database Indexing**: Optimized queries with proper indexes
+- **Bulk Operations**: Efficient bulk updates for sync operations
+- **Connection Pooling**: MongoDB connection optimization
+- **Error Handling**: Graceful error handling and recovery
+- **Logging**: Structured logging for monitoring and debugging
+
+## 🔒 Security Features
+
+- **Input Validation**: Express-validator for request validation
+- **Error Handling**: Secure error messages without sensitive data exposure
+- **CORS Configuration**: Configurable cross-origin resource sharing
+- **Environment Variables**: Sensitive data protection
+
+## 🆘 Support
+
+For support and questions:
+
+- Check the logs in `logs/` directory
+- Use the health check endpoint: `GET /health`
+- Review the API documentation above
+- Check MongoDB connection status
+
+
+
+================================================
+FILE: docker-compose.yml
+================================================
+services:
+  app:
+    build:
+      context: .
+      target: dev
+      args:
+        NODE_ENV: development
+        PORT: 3000
+    ports:
+      - '${PORT:-3000}:${PORT:-3000}'
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/task-management-system}
+      - PORT=${PORT:-3000}
+      - DEBUG=app:*
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - app_logs:/app/logs
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', 'healthcheck.js']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mongo:
+    image: mongo:7-jammy
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
+      - MONGO_INITDB_DATABASE=task-management-system
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mongo_data:
+    driver: local
+  app_logs:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
+
+
+
+================================================
+FILE: Dockerfile
+================================================
+# Multi-stage build for production optimization
+FROM node:18-alpine AS base
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Create app directory and user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S appuser -u 1001
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+FROM base AS deps
+RUN npm ci --only=production && npm cache clean --force
+
+# Development stage
+FROM base AS dev
+RUN npm ci
+COPY . .
+RUN mkdir -p logs && chown appuser:nodejs logs
+USER appuser
+EXPOSE 3000
+CMD ["dumb-init", "node", "src/server.js"]
+
+# Build stage
+FROM base AS build
+RUN npm ci
+COPY . .
+RUN npm run build 2>/dev/null || echo "No build script found"
+
+# Production stage
+FROM base AS production
+
+# Build arguments
+ARG NODE_ENV=production
+ARG PORT=3000
+
+# Environment variables
+ENV NODE_ENV=${NODE_ENV}
+ENV PORT=${PORT}
+
+# Copy dependencies from deps stage
+COPY --from=deps --chown=appuser:nodejs /app/node_modules ./node_modules
+
+# Copy application code
+COPY --chown=appuser:nodejs . .
+
+# Create logs directory with proper permissions
+RUN mkdir -p logs && chown appuser:nodejs logs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js
+
+# Use non-root user
+USER appuser
+
+# Expose port
+EXPOSE ${PORT}
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "src/server.js"]
+
+
+
+================================================
+FILE: healthcheck.js
+================================================
+const http = require('http');
+
+const options = {
+  host: 'localhost',
+  port: process.env.PORT || 3000,
+  path: '/health',
+  timeout: 2000,
+};
+
+const request = http.request(options, res => {
+  console.log(`Health check status: ${res.statusCode}`);
+  process.exit(res.statusCode === 200 ? 0 : 1);
+});
+
+request.on('error', err => {
+  console.error('Health check failed:', err.message);
+  process.exit(1);
+});
+
+request.on('timeout', () => {
+  console.error('Health check timed out');
+  request.destroy();
+  process.exit(1);
+});
+
+request.end();
+
+
+
+================================================
+FILE: package.json
+================================================
+{
+  "name": "task-management-system",
+  "version": "1.0.0",
+  "description": "A comprehensive task management system for activities, workshops, mentoring, and networking",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "build": "echo \"No build step required for this project\"",
+    "test": "npm run test:lint",
+    "test:lint": "npm run lint",
+    "test:integration": "node -e \"console.log('Integration tests would run here'); process.exit(0)\"",
+    "test:coverage": "node -e \"console.log('Coverage report would be generated here'); process.exit(0)\"",
+    "lint": "eslint src/ --max-warnings 20",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
+    "logs": "mkdir -p logs"
+  },
+  "keywords": [
+    "task",
+    "management",
+    "productivity",
+    "activities",
+    "workshops",
+    "mentoring",
+    "networking"
+  ],
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "mongoose": "^7.8.7",
+    "morgan": "^1.10.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "prettier": "^3.5.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.5.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss,html}": [
+      "prettier --write"
+    ]
+  }
+}
+
+
+
+================================================
+FILE: .dockerignore
+================================================
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.*
+
+# Temporary folders
+tmp/
+temp/
+
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github
+.travis.yml
+Jenkinsfile
+codeship-*.yml
+
+# Documentation
+README.md
+
+# IDE
+.vscode
+
+# OS
+.DS_Store
+
+
+
+================================================
+FILE: .env.example
+================================================
+NODE_ENV=development
+PORT=3000
+MONGODB_URI=
+CORS_ORIGIN=http://localhost:3000
+
+
+
+================================================
+FILE: .eslintrc.js
+================================================
+module.exports = {
+  env: {
+    browser: true,
+    commonjs: true,
+    es2021: true,
+    node: true,
+  },
+  extends: ['eslint:recommended', 'prettier'],
+  plugins: ['prettier'],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  rules: {
+    'prettier/prettier': 'error',
+    'no-unused-vars': ['warn'],
+    'no-console': ['warn'],
+    'no-debugger': 'warn',
+    'no-duplicate-imports': 'error',
+    'no-unused-expressions': 'error',
+    'prefer-const': 'error',
+    'no-var': 'error',
+    'no-process-exit': 'warn',
+    'handle-callback-err': 'error',
+  },
+  ignorePatterns: ['node_modules/', 'logs/', '*.min.js', 'src/public/', 'healthcheck.js'],
+  overrides: [
+    {
+      files: [
+        'src/config/**/*.js',
+        'src/controllers/**/*.js',
+        'src/middleware/**/*.js',
+        'src/services/**/*.js',
+      ],
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
+    {
+      files: ['src/public/js/**/*.js'],
+      env: {
+        browser: true,
+        es2021: true,
+      },
+      parserOptions: {
+        sourceType: 'module',
+      },
+    },
+  ],
+};
+
+
+
+================================================
+FILE: .prettierignore
+================================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Package lock files (keep original formatting)
+package-lock.json
+yarn.lock
+
+# Git files
+.git/
+.gitignore
+
+# Docker files that should keep their formatting
+Dockerfile*
+.dockerignore
+
+# Environment files
+.env*
+
+
+
+================================================
+FILE: .prettierrc.js
+================================================
+module.exports = {
+  semi: true,
+  trailingComma: 'es5',
+  singleQuote: true,
+  tabWidth: 2,
+  useTabs: false,
+  printWidth: 100,
+  bracketSpacing: true,
+  bracketSameLine: false,
+  arrowParens: 'avoid',
+  quoteProps: 'as-needed',
+  endOfLine: 'lf',
+  embeddedLanguageFormatting: 'auto',
+  htmlWhitespaceSensitivity: 'css',
+  vueIndentScriptAndStyle: false,
+  overrides: [
+    {
+      files: '*.json',
+      options: {
+        printWidth: 80,
+      },
+    },
+    {
+      files: '*.md',
+      options: {
+        printWidth: 80,
+        proseWrap: 'always',
+      },
+    },
+    {
+      files: '*.yml',
+      options: {
+        tabWidth: 2,
+      },
+    },
+  ],
+};
+
+
+
+================================================
+FILE: src/app.js
+================================================
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const morgan = require('morgan');
+require('dotenv').config();
+
+// Import utilities and middleware
+const logger = require('./utils/logger');
+const connectDB = require('./config/database');
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+
+// Import routes
+const activityRoutes = require('./routes/activityRoutes');
+
+const app = express();
+
+connectDB();
+
+// Middleware
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    credentials: true,
+  })
+);
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// HTTP request logger
+app.use(
+  morgan('combined', {
+    stream: {
+      write: message => logger.http(message.trim()),
+    },
+  })
+);
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check endpoint
+app.get('/health', (_req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
+// API routes
+app.use('/api', activityRoutes);
+
+// Serve the main HTML file for all other routes (SPA support)
+app.get('*', (req, res) => {
+  // Skip API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+// Error handling middleware
+app.use(notFound);
+app.use(errorHandler);
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received. Shutting down gracefully...');
+  // eslint-disable-next-line no-process-exit
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT received. Shutting down gracefully...');
+  // eslint-disable-next-line no-process-exit
+  process.exit(0);
+});
+
+module.exports = app;
+
+
+
+================================================
+FILE: src/server.js
+================================================
+const app = require('./app');
+const logger = require('./utils/logger');
+
+const PORT = process.env.PORT || 3000;
+
+// Start the server
+const server = app.listen(PORT, () => {
+  logger.info(`🚀 Server running on port ${PORT}`);
+  logger.info(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🌐 Health check: http://localhost:${PORT}/health`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', err => {
+  logger.error('Unhandled Promise Rejection:', err.message);
+  // Close server & exit process
+  server.close(() => {
+    // eslint-disable-next-line no-process-exit
+    process.exit(1);
+  });
+});
+
+module.exports = server;
+
+
+
+================================================
+FILE: src/config/database.js
+================================================
+const mongoose = require('mongoose');
+const logger = require('../utils/logger');
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/task-management-system',
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
+
+    // Handle connection events
+    mongoose.connection.on('error', err => {
+      logger.error('MongoDB connection error:', err);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      logger.info('MongoDB disconnected');
+    });
+
+    // Graceful shutdown
+    process.on('SIGINT', async () => {
+      await mongoose.connection.close();
+      logger.info('MongoDB connection closed through app termination');
+      // eslint-disable-next-line no-process-exit
+      process.exit(0);
+    });
+  } catch (error) {
+    logger.error('Error connecting to MongoDB:', error);
+    // eslint-disable-next-line no-process-exit
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
+
+
+
+================================================
+FILE: src/controllers/activityController.js
+================================================
+const ActivityService = require('../services/activityService');
+const Activity = require('../models/Activity');
+const { validationResult } = require('express-validator');
+const logger = require('../utils/logger');
+
+// Get all activities with optional filters
+exports.getActivities = async (req, res) => {
+  try {
+    const activities = await ActivityService.getActivities(req.query);
+    res.json(activities);
+  } catch (error) {
+    logger.error('Error fetching activities:', error);
+    res.status(500).json({ error: 'Failed to fetch activities' });
+  }
+};
+
+// Get a single activity by ID
+exports.getActivityById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activity = await Activity.findOne({ id });
+
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+
+    res.json(activity);
+  } catch (error) {
+    logger.error('Error fetching activity:', error);
+    res.status(500).json({ error: 'Failed to fetch activity' });
+  }
+};
+
+// Create a new activity
+exports.createActivity = async (req, res) => {
+  try {
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const activity = await ActivityService.createActivity(req.body);
+    res.status(201).json(activity);
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ error: 'Activity with this ID already exists' });
+    }
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Update an activity
+exports.updateActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activity = await ActivityService.updateActivity(id, req.body);
+    res.json(activity);
+  } catch (error) {
+    if (error.message === 'Activity not found') {
+      return res.status(404).json({ error: error.message });
+    }
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete an activity
+exports.deleteActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await ActivityService.deleteActivity(id);
+    res.json({ message: 'Activity deleted successfully' });
+  } catch (error) {
+    if (error.message === 'Activity not found') {
+      return res.status(404).json({ error: error.message });
+    }
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Sync activities (bulk update/create)
+exports.syncActivities = async (req, res) => {
+  try {
+    const activities = req.body;
+
+    if (!Array.isArray(activities)) {
+      return res.status(400).json({ error: 'Expected an array of activities' });
+    }
+
+    // Get all activity IDs from the database
+    const existingActivities = await Activity.find({}, 'id');
+    const existingIds = new Set(existingActivities.map(activity => activity.id));
+
+    // Process each activity
+    const operations = [];
+    for (const activity of activities) {
+      if (existingIds.has(activity.id)) {
+        // Update existing activity
+        operations.push({
+          updateOne: {
+            filter: { id: activity.id },
+            update: activity,
+            upsert: false,
+          },
+        });
+      } else {
+        // Create new activity
+        operations.push({
+          insertOne: {
+            document: activity,
+          },
+        });
+      }
+    }
+
+    // Execute bulk operations
+    if (operations.length > 0) {
+      await Activity.bulkWrite(operations);
+    }
+
+    // Get updated list of all activities
+    const updatedActivities = await Activity.find().sort({ date: 1, time: 1 });
+    res.json(updatedActivities);
+  } catch (error) {
+    logger.error('Error syncing activities:', error);
+    res.status(500).json({ error: 'Failed to sync activities' });
+  }
+};
+
+// Complete an activity
+exports.completeActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activity = await Activity.findOne({ id });
+
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+
+    if (activity.cancelled) {
+      return res.status(400).json({ error: 'Cannot complete a cancelled activity' });
+    }
+
+    await activity.complete();
+    res.json(activity);
+  } catch (error) {
+    logger.error('Error completing activity:', error);
+    res.status(500).json({ error: 'Failed to complete activity' });
+  }
+};
+
+// Cancel an activity
+exports.cancelActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activity = await Activity.findOne({ id });
+
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+
+    if (activity.completed) {
+      return res.status(400).json({ error: 'Cannot cancel a completed activity' });
+    }
+
+    await activity.cancel();
+    res.json(activity);
+  } catch (error) {
+    logger.error('Error cancelling activity:', error);
+    res.status(500).json({ error: 'Failed to cancel activity' });
+  }
+};
+
+// Get unique mentors
+exports.getMentors = async (req, res) => {
+  try {
+    const mentoringSessions = await Activity.find({ type: 'mentoring' });
+    const mentors = [...new Set(mentoringSessions.map(session => session.mentor).filter(Boolean))];
+    res.json(mentors);
+  } catch (error) {
+    logger.error('Error fetching mentors:', error);
+    res.status(500).json({ error: 'Failed to fetch mentors' });
+  }
+};
+
+// Get statistics
+exports.getStatistics = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    const stats = await Activity.getStatistics(startDate, endDate);
+    res.json(stats);
+  } catch (error) {
+    logger.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Failed to fetch statistics' });
+  }
+};
+
+// Get upcoming activities
+exports.getUpcomingActivities = async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    const activities = await Activity.findUpcoming().limit(parseInt(limit));
+    res.json(activities);
+  } catch (error) {
+    logger.error('Error fetching upcoming activities:', error);
+    res.status(500).json({ error: 'Failed to fetch upcoming activities' });
+  }
+};
+
+// Get recent completed activities
+exports.getRecentActivities = async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    const activities = await Activity.findCompleted().limit(parseInt(limit));
+    res.json(activities);
+  } catch (error) {
+    logger.error('Error fetching recent activities:', error);
+    res.status(500).json({ error: 'Failed to fetch recent activities' });
+  }
+};
+
+
+
+================================================
+FILE: src/middleware/errorHandler.js
+================================================
+const logger = require('../utils/logger');
+
+// Error handling middleware
+const errorHandler = (err, _, res) => {
+  logger.error(err.stack);
+
+  // Mongoose validation error
+  if (err.name === 'ValidationError') {
+    const errors = Object.values(err.errors).map(e => e.message);
+    return res.status(400).json({
+      error: 'Validation Error',
+      details: errors,
+    });
+  }
+
+  // Mongoose duplicate key error
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue)[0];
+    return res.status(400).json({
+      error: `Duplicate value for ${field}`,
+    });
+  }
+
+  // Mongoose cast error
+  if (err.name === 'CastError') {
+    return res.status(400).json({
+      error: 'Invalid ID format',
+    });
+  }
+
+  // JWT errors
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      error: 'Invalid token',
+    });
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({
+      error: 'Token expired',
+    });
+  }
+
+  // Default error
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+};
+
+// Not found middleware
+const notFound = (req, res, next) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+};
+
+module.exports = {
+  errorHandler,
+  notFound,
+};
+
+
+
+================================================
+FILE: src/models/Activity.js
+================================================
+const mongoose = require('mongoose');
+
+const activitySchema = new mongoose.Schema(
+  {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ['workshop', 'mentoring', 'networking'],
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    date: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    location: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    capacity: {
+      type: Number,
+      default: null,
+      min: 0,
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+    cancelled: {
+      type: Boolean,
+      default: false,
+    },
+    createdAt: {
+      type: String,
+      required: true,
+    },
+    completedDate: {
+      type: String,
+      default: null,
+    },
+
+    // Workshop specific fields
+    presenter: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    materials: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
+    // Mentoring specific fields
+    mentor: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    mentee: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    focus: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
+    // Networking specific fields
+    format: {
+      type: String,
+      default: 'mixer',
+      enum: ['mixer', 'roundtable', 'speed-networking', 'panel', 'other'],
+    },
+    partners: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+// Indexes for better query performance
+activitySchema.index({ type: 1, date: 1 });
+activitySchema.index({ completed: 1, cancelled: 1 });
+activitySchema.index({ date: 1 });
+
+// Virtual for checking if activity is upcoming
+activitySchema.virtual('isUpcoming').get(function () {
+  const activityDate = new Date(this.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return activityDate >= today && !this.completed && !this.cancelled;
+});
+
+// Virtual for checking if activity is past due
+activitySchema.virtual('isPastDue').get(function () {
+  const activityDate = new Date(this.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return activityDate < today && !this.completed && !this.cancelled;
+});
+
+// Instance methods
+activitySchema.methods.complete = function () {
+  this.completed = true;
+  this.completedDate = new Date().toISOString();
+  return this.save();
+};
+
+activitySchema.methods.cancel = function () {
+  this.cancelled = true;
+  return this.save();
+};
+
+// Static methods
+activitySchema.statics.findByType = function (type) {
+  return this.find({ type });
+};
+
+activitySchema.statics.findUpcoming = function () {
+  const today = new Date().toISOString().split('T')[0];
+  return this.find({
+    date: { $gte: today },
+    completed: false,
+    cancelled: false,
+  }).sort({ date: 1 });
+};
+
+activitySchema.statics.findCompleted = function () {
+  return this.find({ completed: true }).sort({ completedDate: -1 });
+};
+
+activitySchema.statics.getStatistics = async function (startDate, endDate) {
+  const query = {};
+  if (startDate && endDate) {
+    query.date = { $gte: startDate, $lte: endDate };
+  }
+
+  const activities = await this.find(query);
+
+  const stats = {
+    total: activities.length,
+    byType: {
+      workshop: 0,
+      mentoring: 0,
+      networking: 0,
+    },
+    byStatus: {
+      upcoming: 0,
+      completed: 0,
+      cancelled: 0,
+    },
+    completionRate: 0,
+  };
+
+  let completable = 0;
+  let completed = 0;
+
+  activities.forEach(activity => {
+    // Count by type
+    stats.byType[activity.type]++;
+
+    // Count by status
+    if (activity.cancelled) {
+      stats.byStatus.cancelled++;
+    } else if (activity.completed) {
+      stats.byStatus.completed++;
+      completed++;
+    } else {
+      stats.byStatus.upcoming++;
+    }
+
+    // Count completable activities (not cancelled)
+    if (!activity.cancelled) {
+      completable++;
+    }
+  });
+
+  // Calculate completion rate
+  stats.completionRate = completable > 0 ? (completed / completable) * 100 : 0;
+
+  return stats;
+};
+
+const Activity = mongoose.model('Activity', activitySchema);
+
+module.exports = Activity;
+
+
+
+================================================
+FILE: src/public/index.html
+================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System | Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="js/app.js" defer type="module"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">Task<span>Management</span></h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-view="dashboard">
+                        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-view="workshops">
+                        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        <span>Workshops</span>
+                    </li>
+                    <li class="nav-item" data-view="mentoring">
+                        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                        <span>Mentoring</span>
+                    </li>
+                    <li class="nav-item" data-view="networking">
+                        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        <span>Networking</span>
+                    </li>
+                    <li class="nav-item" data-view="analytics">
+                        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                        <span>Analytics</span>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="sync-btn" class="sync-button">
+                    <svg viewBox="0 0 24 24" class="sync-icon"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                    <span>Sync Data</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-container">
+                    <svg viewBox="0 0 24 24" class="search-icon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" id="search-input" placeholder="Search activities...">
+                </div>
+                <div class="user-menu">
+                    <button id="add-activity-btn" class="add-button">
+                        <svg viewBox="0 0 24 24" class="add-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>New Activity</span>
+                    </button>
+                    <div class="user-profile">
+                        <span class="user-name">Admin</span>
+                        <div class="avatar">A</div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="dashboard-view" class="view active">
+                <div class="dashboard-header">
+                    <h2>Dashboard</h2>
+                    <div class="date-filter">
+                        <button class="date-btn active" data-period="week">Week</button>
+                        <button class="date-btn" data-period="month">Month</button>
+                        <button class="date-btn" data-period="quarter">Quarter</button>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon workshop-icon">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Workshops</h3>
+                            <p class="metric-value">12</p>
+                            <p class="metric-trend positive">+3 from last period</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon mentoring-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Mentoring Sessions</h3>
+                            <p class="metric-value">28</p>
+                            <p class="metric-trend positive">+5 from last period</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon networking-icon">
+                            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Networking Events</h3>
+                            <p class="metric-value">7</p>
+                            <p class="metric-trend positive">+2 from last period</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon participants-icon">
+                            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Total Participants</h3>
+                            <p class="metric-value">342</p>
+                            <p class="metric-trend positive">+47 from last period</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upcoming-activities">
+                    <div class="section-header">
+                        <h3>Upcoming Activities</h3>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="activity-list" id="upcoming-list">
+                        <!-- Activities will be populated here -->
+                    </div>
+                </div>
+
+                <div class="recent-activities">
+                    <div class="section-header">
+                        <h3>Recent Activities</h3>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="activity-list" id="recent-list">
+                        <!-- Activities will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="workshops-view" class="view">
+                <div class="view-header">
+                    <h2>Workshops</h2>
+                    <button id="add-workshop-btn" class="add-button">
+                        <svg viewBox="0 0 24 24" class="add-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>New Workshop</span>
+                    </button>
+                </div>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="workshop-status">Status:</label>
+                        <select id="workshop-status">
+                            <option value="all">All</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="workshop-date">Date Range:</label>
+                        <input type="date" id="workshop-date-start">
+                        <span>to</span>
+                        <input type="date" id="workshop-date-end">
+                    </div>
+                    <button id="apply-workshop-filters" class="filter-button">Apply Filters</button>
+                </div>
+                <div class="workshops-grid" id="workshops-grid">
+                    <!-- Workshops will be populated here -->
+                </div>
+            </div>
+
+            <div id="mentoring-view" class="view">
+                <div class="view-header">
+                    <h2>Mentoring Sessions</h2>
+                    <button id="add-mentoring-btn" class="add-button">
+                        <svg viewBox="0 0 24 24" class="add-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>New Session</span>
+                    </button>
+                </div>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="mentoring-status">Status:</label>
+                        <select id="mentoring-status">
+                            <option value="all">All</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="mentoring-mentor">Mentor:</label>
+                        <select id="mentoring-mentor">
+                            <option value="all">All Mentors</option>
+                            <!-- Mentors will be populated here -->
+                        </select>
+                    </div>
+                    <button id="apply-mentoring-filters" class="filter-button">Apply Filters</button>
+                </div>
+                <div class="mentoring-list" id="mentoring-list">
+                    <!-- Mentoring sessions will be populated here -->
+                </div>
+            </div>
+
+            <div id="networking-view" class="view">
+                <div class="view-header">
+                    <h2>Networking Events</h2>
+                    <button id="add-networking-btn" class="add-button">
+                        <svg viewBox="0 0 24 24" class="add-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>New Event</span>
+                    </button>
+                </div>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="networking-status">Status:</label>
+                        <select id="networking-status">
+                            <option value="all">All</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="networking-type">Type:</label>
+                        <select id="networking-type">
+                            <option value="all">All Types</option>
+                            <option value="mixer">Mixer</option>
+                            <option value="conference">Conference</option>
+                            <option value="pitch">Pitch Event</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <button id="apply-networking-filters" class="filter-button">Apply Filters</button>
+                </div>
+                <div class="networking-grid" id="networking-grid">
+                    <!-- Networking events will be populated here -->
+                </div>
+            </div>
+
+            <div id="analytics-view" class="view">
+                <div class="view-header">
+                    <h2>Analytics & Impact</h2>
+                    <div class="date-range-picker">
+                        <input type="date" id="analytics-date-start">
+                        <span>to</span>
+                        <input type="date" id="analytics-date-end">
+                        <button id="apply-analytics-dates" class="filter-button">Apply</button>
+                    </div>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-card wide">
+                        <h3>Activity Distribution</h3>
+                        <div class="chart-container" id="activity-distribution-chart">
+                            <!-- Chart will be rendered here -->
+                            <div class="placeholder-chart">Chart: Activity Distribution</div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Participant Growth</h3>
+                        <div class="chart-container" id="participant-growth-chart">
+                            <!-- Chart will be rendered here -->
+                            <div class="placeholder-chart">Chart: Participant Growth</div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Completion Rates</h3>
+                        <div class="chart-container" id="completion-rates-chart">
+                            <!-- Chart will be rendered here -->
+                            <div class="placeholder-chart">Chart: Completion Rates</div>
+                        </div>
+                    </div>
+                    <div class="analytics-card wide">
+                        <h3>Impact Metrics</h3>
+                        <div class="impact-metrics">
+                            <div class="impact-metric">
+                                <h4>New Ventures</h4>
+                                <p class="impact-value">24</p>
+                            </div>
+                            <div class="impact-metric">
+                                <h4>Jobs Created</h4>
+                                <p class="impact-value">87</p>
+                            </div>
+                            <div class="impact-metric">
+                                <h4>Funding Secured</h4>
+                                <p class="impact-value">$1.2M</p>
+                            </div>
+                            <div class="impact-metric">
+                                <h4>Success Rate</h4>
+                                <p class="impact-value">68%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for adding/editing activities -->
+    <div id="activity-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Activity</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="activity-form">
+                    <div class="form-group">
+                        <label for="activity-type">Activity Type</label>
+                        <select id="activity-type" required>
+                            <option value="workshop">Workshop</option>
+                            <option value="mentoring">Mentoring Session</option>
+                            <option value="networking">Networking Event</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-title">Title</label>
+                        <input type="text" id="activity-title" required placeholder="Enter activity title">
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-description">Description</label>
+                        <textarea id="activity-description" rows="3" placeholder="Enter activity description"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="activity-date">Date</label>
+                            <input type="date" id="activity-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="activity-time">Time</label>
+                            <input type="time" id="activity-time" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-location">Location</label>
+                        <input type="text" id="activity-location" placeholder="Enter location">
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-capacity">Capacity</label>
+                        <input type="number" id="activity-capacity" min="1" placeholder="Enter maximum participants">
+                    </div>
+                    
+                    <!-- Workshop-specific fields -->
+                    <div id="workshop-fields" class="activity-type-fields">
+                        <div class="form-group">
+                            <label for="workshop-presenter">Presenter</label>
+                            <input type="text" id="workshop-presenter" placeholder="Enter presenter name">
+                        </div>
+                        <div class="form-group">
+                            <label for="workshop-materials">Materials Needed</label>
+                            <textarea id="workshop-materials" rows="2" placeholder="List required materials"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Mentoring-specific fields -->
+                    <div id="mentoring-fields" class="activity-type-fields">
+                        <div class="form-group">
+                            <label for="mentoring-mentor">Mentor</label>
+                            <input type="text" id="mentoring-mentor-input" placeholder="Enter mentor name">
+                        </div>
+                        <div class="form-group">
+                            <label for="mentoring-mentee">Mentee</label>
+                            <input type="text" id="mentoring-mentee" placeholder="Enter mentee name">
+                        </div>
+                        <div class="form-group">
+                            <label for="mentoring-focus">Focus Area</label>
+                            <input type="text" id="mentoring-focus" placeholder="Enter focus area">
+                        </div>
+                    </div>
+                    
+                    <!-- Networking-specific fields -->
+                    <div id="networking-fields" class="activity-type-fields">
+                        <div class="form-group">
+                            <label for="networking-format">Format</label>
+                            <select id="networking-format">
+                                <option value="mixer">Mixer</option>
+                                <option value="conference">Conference</option>
+                                <option value="pitch">Pitch Event</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="networking-partners">Partners</label>
+                            <input type="text" id="networking-partners" placeholder="Enter partner organizations">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="save-btn">Save Activity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-message" class="status-message"></div>
+</body>
+</html>
+
+
+
+================================================
+FILE: src/public/css/styles.css
+================================================
+:root {
+  --primary-color: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --secondary-color: #10b981;
+  --secondary-light: #34d399;
+  --secondary-dark: #059669;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --bg-dark: #111827;
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --transition: all 0.3s ease;
+
+  /* Activity type colors */
+  --workshop-color: #3b82f6;
+  --mentoring-color: #10b981;
+  --networking-color: #8b5cf6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-light);
+  line-height: 1.5;
+}
+
+/* Layout */
+.app-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--bg-white);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.logo span {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.5rem;
+}
+
+.nav-item:hover {
+  background-color: var(--border-light);
+  color: var(--primary-color);
+}
+
+.nav-item.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.nav-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  fill: currentColor;
+}
+
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.sync-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sync-button:hover {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.sync-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  fill: currentColor;
+}
+
+/* Main Content */
+.main-content {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-container {
+  position: relative;
+  width: 300px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--text-tertiary);
+}
+
+#search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.add-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.add-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  fill: currentColor;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-name {
+  margin-right: 0.75rem;
+  font-weight: 500;
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* Views */
+.view {
+  padding: 2rem;
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.view-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Dashboard */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.date-filter {
+  display: flex;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.date-btn {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.date-btn:hover {
+  background-color: var(--border-light);
+}
+
+.date-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+}
+
+.metric-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.metric-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: white;
+}
+
+.workshop-icon {
+  background-color: var(--workshop-color);
+}
+
+.mentoring-icon {
+  background-color: var(--mentoring-color);
+}
+
+.networking-icon {
+  background-color: var(--networking-color);
+}
+
+.participants-icon {
+  background-color: var(--warning-color);
+}
+
+.metric-content h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.metric-trend {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.metric-trend.positive {
+  color: var(--secondary-color);
+}
+
+.metric-trend.negative {
+  color: var(--danger-color);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.view-all-btn {
+  color: var(--primary-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.view-all-btn:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.upcoming-activities,
+.recent-activities {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.activity-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.activity-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-color {
+  width: 0.5rem;
+  height: 3rem;
+  border-radius: var(--radius-sm);
+  margin-right: 1rem;
+}
+
+.activity-color.workshop {
+  background-color: var(--workshop-color);
+}
+
+.activity-color.mentoring {
+  background-color: var(--mentoring-color);
+}
+
+.activity-color.networking {
+  background-color: var(--networking-color);
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.activity-meta {
+  display: flex;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.activity-date {
+  margin-right: 1rem;
+}
+
+.activity-type {
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.activity-type.workshop {
+  background-color: var(--workshop-color);
+}
+
+.activity-type.mentoring {
+  background-color: var(--mentoring-color);
+}
+
+.activity-type.networking {
+  background-color: var(--networking-color);
+}
+
+.activity-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.activity-btn {
+  padding: 0.5rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.activity-btn:hover {
+  background-color: var(--border-light);
+}
+
+.activity-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--text-secondary);
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--bg-white);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-white);
+}
+
+.filter-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Workshops Grid */
+.workshops-grid,
+.networking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.workshop-card,
+.networking-card {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.workshop-card:hover,
+.networking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.workshop-header,
+.networking-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.workshop-title,
+.networking-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.workshop-meta,
+.networking-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.workshop-body,
+.networking-body {
+  padding: 1.5rem;
+}
+
+.workshop-description,
+.networking-description {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.workshop-details,
+.networking-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.workshop-footer,
+.networking-footer {
+  padding: 1rem 1.5rem;
+  background-color: var(--border-light);
+  display: flex;
+  justify-content: space-between;
+}
+
+.workshop-status,
+.networking-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-upcoming {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.status-completed {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.status-cancelled {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Mentoring List */
+.mentoring-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.mentoring-item {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.mentoring-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4rem;
+}
+
+.mentoring-day {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.mentoring-month {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.mentoring-time {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.mentoring-content {
+  flex: 1;
+}
+
+.mentoring-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mentoring-participants {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mentor,
+.mentee {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.mentor-label,
+.mentee-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: 0.5rem;
+}
+
+.mentoring-focus {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.mentoring-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Analytics View */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.analytics-card {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.analytics-card.wide {
+  grid-column: span 2;
+}
+
+.analytics-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.chart-container {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-chart {
+  color: var(--text-tertiary);
+  border: 2px dashed var(--border-color);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.impact-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.impact-metric {
+  text-align: center;
+}
+
+.impact-metric h4 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.impact-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: var(--bg-white);
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-tertiary);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.activity-type-fields {
+  display: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cancel-btn:hover {
+  background-color: var(--border-color);
+}
+
+.save-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.save-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Status Message */
+.status-message {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-dark);
+  color: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.status-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .app-container {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-card.wide {
+    grid-column: span 1;
+  }
+
+  .impact-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .top-bar {
+    padding: 1rem;
+  }
+
+  .search-container {
+    width: 200px;
+  }
+
+  .view {
+    padding: 1rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workshops-grid,
+  .networking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+}
+
+
+
+================================================
+FILE: src/public/js/app.js
+================================================
+import { ActivityList } from './webapp/classes.js';
+import { CommandExecutor, Command, Commands } from './webapp/command.js';
+import { LocalStorage } from './webapp/storage.js';
+import { ApiService } from './webapp/api-service.js';
+import { ChartRenderer } from './webapp/chart-renderer.js';
+
+// Global DOM references
+globalThis.DOM = {};
+const DOM = globalThis.DOM;
+
+// Current view
+let currentView = 'dashboard';
+
+// Show status message
+function showStatus(message, isError = false) {
+  DOM.statusMessage.textContent = message;
+  DOM.statusMessage.classList.add('show');
+
+  if (isError) {
+    DOM.statusMessage.style.backgroundColor = '#ef4444';
+  } else {
+    DOM.statusMessage.style.backgroundColor = '#10b981';
+  }
+
+  setTimeout(() => {
+    DOM.statusMessage.classList.remove('show');
+  }, 3000);
+}
+
+// Make showStatus globally available
+globalThis.showStatus = showStatus;
+
+// Format date for display
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+// Format time for display
+function formatTime(timeString) {
+  const options = { hour: '2-digit', minute: '2-digit' };
+  return new Date(`2000-01-01T${timeString}`).toLocaleTimeString(undefined, options);
+}
+
+// Render upcoming activities in dashboard
+async function renderUpcomingActivities() {
+  const upcomingList = DOM.upcomingList;
+  upcomingList.innerHTML = `<div class="loading">Loading upcoming activities...</div>`;
+
+  try {
+    const upcoming = await ApiService.getUpcomingActivities(5);
+
+    upcomingList.innerHTML = '';
+
+    if (upcoming.length === 0) {
+      upcomingList.innerHTML = `<div class="empty-state">No upcoming activities</div>`;
+      return;
+    }
+
+    for (const activity of upcoming) {
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      activityItem.dataset.id = activity.id;
+
+      activityItem.innerHTML = `
+        <div class="activity-color ${activity.type}"></div>
+        <div class="activity-details">
+          <div class="activity-title">${activity.title}</div>
+          <div class="activity-meta">
+            <span class="activity-date">${formatDate(activity.date)} at ${formatTime(activity.time)}</span>
+            <span class="activity-type ${activity.type}">${activity.type}</span>
+          </div>
+        </div>
+        <div class="activity-actions">
+          <button class="activity-btn edit-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+          <button class="activity-btn complete-btn">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          </button>
+        </div>
+      `;
+
+      upcomingList.appendChild(activityItem);
+    }
+  } catch (error) {
+    console.error('Error loading upcoming activities:', error);
+    upcomingList.innerHTML = `<div class="error-state">Failed to load upcoming activities</div>`;
+  }
+}
+
+// Render recent activities in dashboard
+async function renderRecentActivities() {
+  const recentList = DOM.recentList;
+  recentList.innerHTML = `<div class="loading">Loading recent activities...</div>`;
+
+  try {
+    const recent = await ApiService.getRecentActivities(5);
+
+    recentList.innerHTML = '';
+
+    if (recent.length === 0) {
+      recentList.innerHTML = `<div class="empty-state">No recent activities</div>`;
+      return;
+    }
+
+    for (const activity of recent) {
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      activityItem.dataset.id = activity.id;
+
+      activityItem.innerHTML = `
+        <div class="activity-color ${activity.type}"></div>
+        <div class="activity-details">
+          <div class="activity-title">${activity.title}</div>
+          <div class="activity-meta">
+            <span class="activity-date">Completed on ${formatDate(activity.completedDate)}</span>
+            <span class="activity-type ${activity.type}">${activity.type}</span>
+          </div>
+        </div>
+        <div class="activity-actions">
+          <button class="activity-btn view-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </button>
+        </div>
+      `;
+
+      recentList.appendChild(activityItem);
+    }
+  } catch (error) {
+    console.error('Error loading recent activities:', error);
+    recentList.innerHTML = `<div class="error-state">Failed to load recent activities</div>`;
+  }
+}
+
+// Render workshops
+async function renderWorkshops() {
+  const workshopsGrid = DOM.workshopsGrid;
+  workshopsGrid.innerHTML = `<div class="loading">Loading workshops...</div>`;
+
+  try {
+    // Get filter values
+    const statusFilter = DOM.workshopStatus.value;
+    const dateStartFilter = DOM.workshopDateStart.value;
+    const dateEndFilter = DOM.workshopDateEnd.value;
+
+    // Build filter object
+    const filters = {
+      type: 'workshop',
+    };
+
+    if (statusFilter !== 'all') {
+      filters.status = statusFilter;
+    }
+
+    if (dateStartFilter) {
+      filters.startDate = dateStartFilter;
+    }
+
+    if (dateEndFilter) {
+      filters.endDate = dateEndFilter;
+    }
+
+    // Fetch workshops from API
+    const workshops = await ApiService.getActivitiesByType('workshop', filters);
+
+    workshopsGrid.innerHTML = '';
+
+    if (workshops.length === 0) {
+      workshopsGrid.innerHTML = `<div class="empty-state">No workshops found</div>`;
+      return;
+    }
+
+    for (const workshop of workshops) {
+      const workshopCard = document.createElement('div');
+      workshopCard.className = 'workshop-card';
+      workshopCard.dataset.id = workshop.id;
+
+      let statusClass = 'status-upcoming';
+      let statusText = 'Upcoming';
+
+      if (workshop.cancelled) {
+        statusClass = 'status-cancelled';
+        statusText = 'Cancelled';
+      } else if (workshop.completed) {
+        statusClass = 'status-completed';
+        statusText = 'Completed';
+      }
+
+      workshopCard.innerHTML = `
+      <div class="workshop-header">
+        <h3 class="workshop-title">${workshop.title}</h3>
+        <div class="workshop-meta">
+          <span>${formatDate(workshop.date)}</span>
+          <span>${formatTime(workshop.time)}</span>
+        </div>
+      </div>
+      <div class="workshop-body">
+        <p class="workshop-description">${workshop.description || 'No description provided.'}</p>
+        <div class="workshop-details">
+          <span class="detail-label">Presenter:</span>
+          <span>${workshop.presenter || 'Not specified'}</span>
+          
+          <span class="detail-label">Location:</span>
+          <span>${workshop.location || 'Not specified'}</span>
+          
+          <span class="detail-label">Capacity:</span>
+          <span>${workshop.capacity || 'Unlimited'}</span>
+        </div>
+      </div>
+      <div class="workshop-footer">
+        <span class="workshop-status ${statusClass}">${statusText}</span>
+        <div class="activity-actions">
+          <button class="activity-btn edit-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+          ${
+            !workshop.completed && !workshop.cancelled
+              ? `
+            <button class="activity-btn complete-btn">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </button>
+          `
+              : ''
+          }
+          ${
+            !workshop.cancelled
+              ? `
+            <button class="activity-btn cancel-btn">
+              <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          `
+              : ''
+          }
+        </div>
+      </div>
+    `;
+
+      workshopsGrid.appendChild(workshopCard);
+    }
+  } catch (error) {
+    console.error('Error loading workshops:', error);
+    workshopsGrid.innerHTML = `<div class="error-state">Failed to load workshops</div>`;
+  }
+}
+
+// Render mentoring sessions
+function renderMentoringSessions() {
+  const activities = ActivityList.getInstance();
+  const mentoringList = DOM.mentoringList;
+  mentoringList.innerHTML = '';
+
+  // Get filter values
+  const statusFilter = DOM.mentoringStatus.value;
+  const mentorFilter = DOM.mentoringMentor.value;
+
+  // Filter mentoring sessions
+  const mentoringSessions = Array.from(activities.items)
+    .filter(activity => {
+      // Filter by type
+      if (activity.type !== 'mentoring') return false;
+
+      // Filter by status
+      if (statusFilter !== 'all') {
+        if (statusFilter === 'scheduled' && (activity.completed || activity.cancelled))
+          return false;
+        if (statusFilter === 'completed' && !activity.completed) return false;
+        if (statusFilter === 'cancelled' && !activity.cancelled) return false;
+      }
+
+      // Filter by mentor
+      if (mentorFilter !== 'all' && activity.mentor !== mentorFilter) return false;
+
+      return true;
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (mentoringSessions.length === 0) {
+    mentoringList.innerHTML = `<div class="empty-state">No mentoring sessions found</div>`;
+    return;
+  }
+
+  for (const session of mentoringSessions) {
+    const sessionDate = new Date(session.date);
+    const day = sessionDate.getDate();
+    const month = sessionDate.toLocaleString('default', { month: 'short' });
+
+    const mentoringItem = document.createElement('div');
+    mentoringItem.className = 'mentoring-item';
+    mentoringItem.dataset.id = session.id;
+
+    let statusClass = '';
+    if (session.cancelled) statusClass = 'cancelled';
+    else if (session.completed) statusClass = 'completed';
+
+    mentoringItem.innerHTML = `
+      <div class="mentoring-date">
+        <div class="mentoring-day">${day}</div>
+        <div class="mentoring-month">${month}</div>
+        <div class="mentoring-time">${formatTime(session.time)}</div>
+      </div>
+      <div class="mentoring-content ${statusClass}">
+        <h3 class="mentoring-title">${session.title}</h3>
+        <div class="mentoring-participants">
+          <div class="mentor">
+            <span class="mentor-label">Mentor:</span>
+            <span>${session.mentor || 'Not assigned'}</span>
+          </div>
+          <div class="mentee">
+            <span class="mentee-label">Mentee:</span>
+            <span>${session.mentee || 'Not assigned'}</span>
+          </div>
+        </div>
+        <div class="mentoring-focus">
+          <strong>Focus:</strong> ${session.focus || 'General mentoring'}
+        </div>
+      </div>
+      <div class="mentoring-actions">
+        <button class="activity-btn edit-btn">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+        ${
+          !session.completed && !session.cancelled
+            ? `
+          <button class="activity-btn complete-btn">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          </button>
+        `
+            : ''
+        }
+        ${
+          !session.cancelled
+            ? `
+          <button class="activity-btn cancel-btn">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        `
+            : ''
+        }
+      </div>
+    `;
+
+    mentoringList.appendChild(mentoringItem);
+  }
+}
+
+// Render networking events
+function renderNetworkingEvents() {
+  const activities = ActivityList.getInstance();
+  const networkingGrid = DOM.networkingGrid;
+  networkingGrid.innerHTML = '';
+
+  // Get filter values
+  const statusFilter = DOM.networkingStatus.value;
+  const typeFilter = DOM.networkingType.value;
+
+  // Filter networking events
+  const networkingEvents = Array.from(activities.items)
+    .filter(activity => {
+      // Filter by type
+      if (activity.type !== 'networking') return false;
+
+      // Filter by status
+      if (statusFilter !== 'all') {
+        if (statusFilter === 'upcoming' && (activity.completed || activity.cancelled)) return false;
+        if (statusFilter === 'completed' && !activity.completed) return false;
+        if (statusFilter === 'cancelled' && !activity.cancelled) return false;
+      }
+
+      // Filter by networking type
+      if (typeFilter !== 'all' && activity.format !== typeFilter) return false;
+
+      return true;
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (networkingEvents.length === 0) {
+    networkingGrid.innerHTML = `<div class="empty-state">No networking events found</div>`;
+    return;
+  }
+
+  for (const event of networkingEvents) {
+    const networkingCard = document.createElement('div');
+    networkingCard.className = 'networking-card';
+    networkingCard.dataset.id = event.id;
+
+    let statusClass = 'status-upcoming';
+    let statusText = 'Upcoming';
+
+    if (event.cancelled) {
+      statusClass = 'status-cancelled';
+      statusText = 'Cancelled';
+    } else if (event.completed) {
+      statusClass = 'status-completed';
+      statusText = 'Completed';
+    }
+
+    networkingCard.innerHTML = `
+      <div class="networking-header">
+        <h3 class="networking-title">${event.title}</h3>
+        <div class="networking-meta">
+          <span>${formatDate(event.date)}</span>
+          <span>${formatTime(event.time)}</span>
+        </div>
+      </div>
+      <div class="networking-body">
+        <p class="networking-description">${event.description || 'No description provided.'}</p>
+        <div class="networking-details">
+          <span class="detail-label">Format:</span>
+          <span>${event.format || 'Not specified'}</span>
+          
+          <span class="detail-label">Location:</span>
+          <span>${event.location || 'Not specified'}</span>
+          
+          <span class="detail-label">Partners:</span>
+          <span>${event.partners || 'None'}</span>
+          
+          <span class="detail-label">Capacity:</span>
+          <span>${event.capacity || 'Unlimited'}</span>
+        </div>
+      </div>
+      <div class="networking-footer">
+        <span class="networking-status ${statusClass}">${statusText}</span>
+        <div class="activity-actions">
+          <button class="activity-btn edit-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+          ${
+            !event.completed && !event.cancelled
+              ? `
+            <button class="activity-btn complete-btn">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </button>
+          `
+              : ''
+          }
+          ${
+            !event.cancelled
+              ? `
+            <button class="activity-btn cancel-btn">
+              <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          `
+              : ''
+          }
+        </div>
+      </div>
+    `;
+
+    networkingGrid.appendChild(networkingCard);
+  }
+}
+
+// Render analytics
+function renderAnalytics() {
+  // Get date range values
+  const startDate = DOM.analyticsDateStart.value;
+  const endDate = DOM.analyticsDateEnd.value;
+
+  // Render charts
+  ChartRenderer.renderActivityDistribution('activity-distribution-chart', startDate, endDate);
+  ChartRenderer.renderParticipantGrowth('participant-growth-chart', startDate, endDate);
+  ChartRenderer.renderCompletionRates('completion-rates-chart', startDate, endDate);
+}
+
+// Switch view
+async function switchView(viewName) {
+  // Hide all views
+  document.querySelectorAll('.view').forEach(view => {
+    view.classList.remove('active');
+  });
+
+  // Show selected view
+  document.getElementById(`${viewName}-view`).classList.add('active');
+
+  // Update navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  document.querySelector(`.nav-item[data-view="${viewName}"]`).classList.add('active');
+
+  // Update current view
+  currentView = viewName;
+
+  // Render view content
+  switch (viewName) {
+    case 'dashboard':
+      await renderUpcomingActivities();
+      await renderRecentActivities();
+      break;
+    case 'workshops':
+      await renderWorkshops();
+      break;
+    case 'mentoring':
+      renderMentoringSessions();
+      break;
+    case 'networking':
+      renderNetworkingEvents();
+      break;
+    case 'analytics':
+      renderAnalytics();
+      break;
+  }
+}
+
+// Show activity modal
+function showActivityModal(activity = null) {
+  const modal = DOM.activityModal;
+  const modalTitle = DOM.modalTitle;
+  const form = DOM.activityForm;
+  const activityType = DOM.activityType;
+
+  // Reset form
+  form.reset();
+
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  DOM.activityDate.value = today;
+
+  // Set default time
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  DOM.activityTime.value = `${hours}:${minutes}`;
+
+  // Hide all type-specific fields
+  document.querySelectorAll('.activity-type-fields').forEach(field => {
+    field.style.display = 'none';
+  });
+
+  // If editing an existing activity
+  if (activity) {
+    modalTitle.textContent = 'Edit Activity';
+
+    // Fill form with activity data
+    activityType.value = activity.type;
+    DOM.activityTitle.value = activity.title;
+    DOM.activityDescription.value = activity.description || '';
+    DOM.activityDate.value = activity.date;
+    DOM.activityTime.value = activity.time;
+    DOM.activityLocation.value = activity.location || '';
+    DOM.activityCapacity.value = activity.capacity || '';
+
+    // Fill type-specific fields
+    if (activity.type === 'workshop') {
+      DOM.workshopPresenter.value = activity.presenter || '';
+      DOM.workshopMaterials.value = activity.materials || '';
+      document.getElementById('workshop-fields').style.display = 'block';
+    } else if (activity.type === 'mentoring') {
+      DOM.mentoringMentorInput.value = activity.mentor || '';
+      DOM.mentoringMentee.value = activity.mentee || '';
+      DOM.mentoringFocus.value = activity.focus || '';
+      document.getElementById('mentoring-fields').style.display = 'block';
+    } else if (activity.type === 'networking') {
+      DOM.networkingFormat.value = activity.format || 'mixer';
+      DOM.networkingPartners.value = activity.partners || '';
+      document.getElementById('networking-fields').style.display = 'block';
+    }
+
+    // Store activity ID for update
+    form.dataset.activityId = activity.id;
+  } else {
+    modalTitle.textContent = 'Add New Activity';
+
+    // Show fields for default activity type
+    document.getElementById(`${activityType.value}-fields`).style.display = 'block';
+
+    // Clear activity ID
+    delete form.dataset.activityId;
+  }
+
+  // Show modal
+  modal.style.display = 'block';
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+  // Create DOM references
+  DOM.upcomingList = document.getElementById('upcoming-list');
+  DOM.recentList = document.getElementById('recent-list');
+  DOM.workshopsGrid = document.getElementById('workshops-grid');
+  DOM.mentoringList = document.getElementById('mentoring-list');
+  DOM.networkingGrid = document.getElementById('networking-grid');
+  DOM.statusMessage = document.getElementById('status-message');
+  DOM.activityModal = document.getElementById('activity-modal');
+  DOM.modalTitle = document.getElementById('modal-title');
+  DOM.activityForm = document.getElementById('activity-form');
+  DOM.activityType = document.getElementById('activity-type');
+  DOM.activityTitle = document.getElementById('activity-title');
+  DOM.activityDescription = document.getElementById('activity-description');
+  DOM.activityDate = document.getElementById('activity-date');
+  DOM.activityTime = document.getElementById('activity-time');
+  DOM.activityLocation = document.getElementById('activity-location');
+  DOM.activityCapacity = document.getElementById('activity-capacity');
+  DOM.workshopPresenter = document.getElementById('workshop-presenter');
+  DOM.workshopMaterials = document.getElementById('workshop-materials');
+  DOM.mentoringMentorInput = document.getElementById('mentoring-mentor-input');
+  DOM.mentoringMentee = document.getElementById('mentoring-mentee');
+  DOM.mentoringFocus = document.getElementById('mentoring-focus');
+  DOM.networkingFormat = document.getElementById('networking-format');
+  DOM.networkingPartners = document.getElementById('networking-partners');
+  DOM.workshopStatus = document.getElementById('workshop-status');
+  DOM.workshopDateStart = document.getElementById('workshop-date-start');
+  DOM.workshopDateEnd = document.getElementById('workshop-date-end');
+  DOM.mentoringStatus = document.getElementById('mentoring-status');
+  DOM.mentoringMentor = document.getElementById('mentoring-mentor');
+  DOM.networkingStatus = document.getElementById('networking-status');
+  DOM.networkingType = document.getElementById('networking-type');
+  DOM.analyticsDateStart = document.getElementById('analytics-date-start');
+  DOM.analyticsDateEnd = document.getElementById('analytics-date-end');
+  DOM.syncBtn = document.getElementById('sync-btn');
+
+  // Set default dates for filters
+  const today = new Date();
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(today.getMonth() - 1);
+  const oneMonthLater = new Date();
+  oneMonthLater.setMonth(today.getMonth() + 1);
+
+  const formatDateForInput = date => {
+    return date.toISOString().split('T')[0];
+  };
+
+  DOM.workshopDateStart.value = formatDateForInput(oneMonthAgo);
+  DOM.workshopDateEnd.value = formatDateForInput(oneMonthLater);
+  DOM.analyticsDateStart.value = formatDateForInput(oneMonthAgo);
+  DOM.analyticsDateEnd.value = formatDateForInput(today);
+
+  // Navigation event listeners
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', async () => {
+      await switchView(item.dataset.view);
+    });
+  });
+
+  // Add activity buttons
+  document.getElementById('add-activity-btn').addEventListener('click', () => {
+    showActivityModal();
+  });
+
+  document.getElementById('add-workshop-btn').addEventListener('click', () => {
+    const modal = showActivityModal();
+    DOM.activityType.value = 'workshop';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
+    });
+    document.getElementById('workshop-fields').style.display = 'block';
+  });
+
+  document.getElementById('add-mentoring-btn').addEventListener('click', () => {
+    const modal = showActivityModal();
+    DOM.activityType.value = 'mentoring';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
+    });
+    document.getElementById('mentoring-fields').style.display = 'block';
+  });
+
+  document.getElementById('add-networking-btn').addEventListener('click', () => {
+    const modal = showActivityModal();
+    DOM.activityType.value = 'networking';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
+    });
+    document.getElementById('networking-fields').style.display = 'block';
+  });
+
+  // Activity type change
+  DOM.activityType.addEventListener('change', () => {
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
+    });
+    document.getElementById(`${DOM.activityType.value}-fields`).style.display = 'block';
+  });
+
+  // Close modal
+  document.querySelector('.close-modal').addEventListener('click', () => {
+    DOM.activityModal.style.display = 'none';
+  });
+
+  document.querySelector('.cancel-btn').addEventListener('click', () => {
+    DOM.activityModal.style.display = 'none';
+  });
+
+  // Click outside modal to close
+  window.addEventListener('click', event => {
+    if (event.target === DOM.activityModal) {
+      DOM.activityModal.style.display = 'none';
+    }
+  });
+
+  // Form submission
+  DOM.activityForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const activityId = DOM.activityForm.dataset.activityId;
+    const isEdit = !!activityId;
+
+    // Create command
+    const cmd = new Command(isEdit ? Commands.UPDATE : Commands.ADD, isEdit ? [activityId] : []);
+
+    // Execute command
+    await CommandExecutor.execute(cmd);
+
+    // Close modal
+    DOM.activityModal.style.display = 'none';
+
+    // Refresh current view to show updated data
+    await switchView(currentView);
+  });
+
+  // Filter application
+  document.getElementById('apply-workshop-filters').addEventListener('click', async () => {
+    await renderWorkshops();
+  });
+
+  document.getElementById('apply-mentoring-filters').addEventListener('click', () => {
+    renderMentoringSessions();
+  });
+
+  document.getElementById('apply-networking-filters').addEventListener('click', () => {
+    renderNetworkingEvents();
+  });
+
+  document.getElementById('apply-analytics-dates').addEventListener('click', () => {
+    renderAnalytics();
+  });
+
+  // Sync button
+  DOM.syncBtn.addEventListener('click', async () => {
+    try {
+      DOM.syncBtn.disabled = true;
+      DOM.syncBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" class="sync-icon spinning"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25 1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        <span>Syncing...</span>
+      `;
+
+      await ApiService.syncActivities();
+      showStatus('Activities synchronized successfully');
+
+      // Refresh current view
+      await switchView(currentView);
+    } catch (error) {
+      showStatus('Failed to synchronize activities', true);
+      console.error('Sync error:', error);
+    } finally {
+      DOM.syncBtn.disabled = false;
+      DOM.syncBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" class="sync-icon"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        <span>Sync Data</span>
+      `;
+    }
+  });
+
+  // Activity list event delegation
+  document.addEventListener('click', async event => {
+    // Edit button
+    if (event.target.closest('.edit-btn')) {
+      const activityItem = event.target.closest('[data-id]');
+      if (activityItem) {
+        const activityId = activityItem.dataset.id;
+        const activity = ActivityList.getInstance().findById(activityId);
+        if (activity) {
+          showActivityModal(activity);
+        }
+      }
+    }
+
+    // Complete button
+    if (event.target.closest('.complete-btn')) {
+      const activityItem = event.target.closest('[data-id]');
+      if (activityItem) {
+        const activityId = activityItem.dataset.id;
+        const cmd = new Command(Commands.COMPLETE, [activityId]);
+        await CommandExecutor.execute(cmd);
+        await switchView(currentView);
+      }
+    }
+
+    // Cancel button
+    if (event.target.closest('.cancel-btn')) {
+      const activityItem = event.target.closest('[data-id]');
+      if (activityItem) {
+        const activityId = activityItem.dataset.id;
+        const cmd = new Command(Commands.CANCEL, [activityId]);
+        await CommandExecutor.execute(cmd);
+        await switchView(currentView);
+      }
+    }
+  });
+
+  // Load activities from local storage first
+  LocalStorage.load();
+
+  // Then try to fetch from API
+  ApiService.fetchActivities()
+    .then(() => {
+      showStatus('Activities loaded from server');
+    })
+    .catch(error => {
+      console.error('Error fetching activities:', error);
+      showStatus('Using locally stored activities', true);
+    })
+    .finally(async () => {
+      // Initialize view
+      await switchView('dashboard');
+    });
+});
+
+
+
+================================================
+FILE: src/public/js/webapp/api-service.js
+================================================
+import { ActivityList, Activity } from './classes.js';
+
+const API_URL = '/api';
+
+export const ApiService = {
+  async fetchActivities() {
+    try {
+      const response = await fetch(`${API_URL}/activities`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const activityList = ActivityList.getInstance();
+
+      // Clear current list
+      activityList.clear();
+
+      // Add each activity from the API
+      for (const a of data) {
+        const activity = new Activity(a.type, a.title, a.date, a.time);
+
+        // Copy all properties
+        Object.keys(a).forEach(key => {
+          if (key !== 'id') {
+            // Preserve the original ID
+            activity[key] = a[key];
+          }
+        });
+
+        activityList.add(activity);
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+      throw error;
+    }
+  },
+
+  async syncActivities() {
+    try {
+      const activityList = ActivityList.getInstance();
+      const activities = activityList.toArray();
+
+      const response = await fetch(`${API_URL}/activities/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activities),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error syncing activities:', error);
+      throw error;
+    }
+  },
+
+  async addActivity(activity) {
+    try {
+      const response = await fetch(`${API_URL}/activities`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activity),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      throw error;
+    }
+  },
+
+  async updateActivity(activity) {
+    try {
+      const response = await fetch(`${API_URL}/activities/${activity.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activity),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating activity:', error);
+      throw error;
+    }
+  },
+
+  async deleteActivity(activityId) {
+    try {
+      const response = await fetch(`${API_URL}/activities/${activityId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error deleting activity:', error);
+      throw error;
+    }
+  },
+
+  async completeActivity(activityId) {
+    try {
+      const response = await fetch(`${API_URL}/activities/${activityId}/complete`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error completing activity:', error);
+      throw error;
+    }
+  },
+
+  async cancelActivity(activityId) {
+    try {
+      const response = await fetch(`${API_URL}/activities/${activityId}/cancel`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error cancelling activity:', error);
+      throw error;
+    }
+  },
+
+  async getUpcomingActivities(limit = 10) {
+    try {
+      const response = await fetch(`${API_URL}/activities/upcoming?limit=${limit}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching upcoming activities:', error);
+      throw error;
+    }
+  },
+
+  async getRecentActivities(limit = 10) {
+    try {
+      const response = await fetch(`${API_URL}/activities/recent?limit=${limit}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching recent activities:', error);
+      throw error;
+    }
+  },
+
+  async getStatistics(startDate, endDate) {
+    try {
+      let url = `${API_URL}/statistics`;
+      const params = new URLSearchParams();
+
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching statistics:', error);
+      throw error;
+    }
+  },
+
+  async getMentors() {
+    try {
+      const response = await fetch(`${API_URL}/mentors`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching mentors:', error);
+      throw error;
+    }
+  },
+
+  async getActivitiesByType(type, filters = {}) {
+    try {
+      const params = new URLSearchParams({ type, ...filters });
+      const response = await fetch(`${API_URL}/activities?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching ${type} activities:`, error);
+      throw error;
+    }
+  },
+
+  async getDashboardData() {
+    try {
+      const [upcoming, recent, stats] = await Promise.all([
+        this.getUpcomingActivities(5),
+        this.getRecentActivities(5),
+        this.getStatistics(),
+      ]);
+
+      return { upcoming, recent, stats };
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      throw error;
+    }
+  },
+};
+
+
+
+================================================
+FILE: src/public/js/webapp/chart-renderer.js
+================================================
+import { ActivityList } from './classes.js';
+
+export const ChartRenderer = {
+  // Render activity distribution chart
+  renderActivityDistribution(containerId, startDate = null, endDate = null) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const stats = ActivityList.getInstance().getStats(startDate, endDate);
+
+    container.innerHTML = `
+      <div class="placeholder-chart">
+        <div>Activity Distribution</div>
+        <div>Workshops: ${stats.byType.workshop}</div>
+        <div>Mentoring: ${stats.byType.mentoring}</div>
+        <div>Networking: ${stats.byType.networking}</div>
+      </div>
+    `;
+  },
+
+  // Render participant growth chart
+  renderParticipantGrowth(containerId, _startDate = null, _endDate = null) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="placeholder-chart">
+        <div>Participant Growth</div>
+        <div>This would show participant growth over time</div>
+      </div>
+    `;
+  },
+
+  // Render completion rates chart
+  renderCompletionRates(containerId, startDate = null, endDate = null) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const stats = ActivityList.getInstance().getStats(startDate, endDate);
+
+    container.innerHTML = `
+      <div class="placeholder-chart">
+        <div>Completion Rates</div>
+        <div>Completion Rate: ${stats.completionRate.toFixed(1)}%</div>
+        <div>Completed: ${stats.byStatus.completed}</div>
+        <div>Upcoming: ${stats.byStatus.upcoming}</div>
+        <div>Cancelled: ${stats.byStatus.cancelled}</div>
+      </div>
+    `;
+  },
+};
+
+
+
+================================================
+FILE: src/public/js/webapp/classes.js
+================================================
+import { observerMixin } from './mixins.js';
+
+// Generate a unique ID
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+export class Activity {
+  constructor(type, title, date, time) {
+    this.id = generateId();
+    this.type = type;
+    this.title = title;
+    this.date = date;
+    this.time = time;
+    this.completed = false;
+    this.cancelled = false;
+    this.createdAt = new Date().toISOString();
+    this.completedDate = null;
+
+    // Common properties
+    this.description = '';
+    this.location = '';
+    this.capacity = null;
+
+    // Type-specific properties
+    if (type === 'workshop') {
+      this.presenter = '';
+      this.materials = '';
+    } else if (type === 'mentoring') {
+      this.mentor = '';
+      this.mentee = '';
+      this.focus = '';
+    } else if (type === 'networking') {
+      this.format = 'mixer';
+      this.partners = '';
+    }
+  }
+
+  equals(other) {
+    return this.id === other.id;
+  }
+
+  complete() {
+    this.completed = true;
+    this.completedDate = new Date().toISOString();
+    return this;
+  }
+
+  cancel() {
+    this.cancelled = true;
+    return this;
+  }
+
+  update(data) {
+    // Update common properties
+    this.title = data.title || this.title;
+    this.date = data.date || this.date;
+    this.time = data.time || this.time;
+    this.description = data.description || this.description;
+    this.location = data.location || this.location;
+    this.capacity = data.capacity || this.capacity;
+
+    // Update type-specific properties
+    if (this.type === 'workshop') {
+      this.presenter = data.presenter || this.presenter;
+      this.materials = data.materials || this.materials;
+    } else if (this.type === 'mentoring') {
+      this.mentor = data.mentor || this.mentor;
+      this.mentee = data.mentee || this.mentee;
+      this.focus = data.focus || this.focus;
+    } else if (this.type === 'networking') {
+      this.format = data.format || this.format;
+      this.partners = data.partners || this.partners;
+    }
+
+    return this;
+  }
+}
+
+export class ActivityList {
+  // Data
+  #data = new Set();
+  get items() {
+    return this.#data;
+  }
+
+  // Singleton
+  static instance = null;
+  static {
+    this.instance = new ActivityList();
+  }
+  static getInstance() {
+    return this.instance;
+  }
+  constructor() {
+    if (ActivityList.instance) {
+      throw new Error('Use ActivityList.getInstance() instead.');
+    }
+  }
+
+  // List Behavior
+  add(activity) {
+    const array = Array.from(this.#data);
+    const activityExists = array.filter(a => a.equals(activity)).length > 0;
+    if (!activityExists) {
+      this.#data.add(activity);
+      this.notify();
+    }
+  }
+
+  delete(activityId) {
+    const array = Array.from(this.#data);
+    const activityToDelete = array.find(a => a.id === activityId);
+    if (activityToDelete) {
+      this.#data.delete(activityToDelete);
+      this.notify();
+    }
+  }
+
+  findById(id) {
+    const array = Array.from(this.#data);
+    return array.find(a => a.id === id);
+  }
+
+  update(activityId, data) {
+    const activity = this.findById(activityId);
+    if (activity) {
+      activity.update(data);
+      this.notify();
+    }
+  }
+
+  complete(activityId) {
+    const activity = this.findById(activityId);
+    if (activity) {
+      activity.complete();
+      this.notify();
+    }
+  }
+
+  cancel(activityId) {
+    const activity = this.findById(activityId);
+    if (activity) {
+      activity.cancel();
+      this.notify();
+    }
+  }
+
+  replaceList(list) {
+    this.#data = list;
+    this.notify();
+  }
+
+  clear() {
+    this.#data.clear();
+    this.notify();
+  }
+
+  toArray() {
+    return Array.from(this.#data);
+  }
+
+  // Statistics
+  getStats(startDate = null, endDate = null) {
+    const activities = this.toArray();
+
+    // Filter by date range if provided
+    let filteredActivities = activities;
+    if (startDate && endDate) {
+      filteredActivities = activities.filter(activity => {
+        return activity.date >= startDate && activity.date <= endDate;
+      });
+    }
+
+    // Count by type
+    const countByType = {
+      workshop: 0,
+      mentoring: 0,
+      networking: 0,
+    };
+
+    // Count by status
+    const countByStatus = {
+      upcoming: 0,
+      completed: 0,
+      cancelled: 0,
+    };
+
+    // Calculate completion rate
+    let completable = 0;
+    let completed = 0;
+
+    // Process activities
+    filteredActivities.forEach(activity => {
+      // Count by type
+      countByType[activity.type]++;
+
+      // Count by status
+      if (activity.cancelled) {
+        countByStatus.cancelled++;
+      } else if (activity.completed) {
+        countByStatus.completed++;
+        completed++;
+      } else {
+        countByStatus.upcoming++;
+      }
+
+      // Count completable activities (not cancelled)
+      if (!activity.cancelled) {
+        completable++;
+      }
+    });
+
+    // Calculate completion rate
+    const completionRate = completable > 0 ? (completed / completable) * 100 : 0;
+
+    return {
+      total: filteredActivities.length,
+      byType: countByType,
+      byStatus: countByStatus,
+      completionRate: completionRate,
+    };
+  }
+}
+
+// Apply Observer mixin
+Object.assign(ActivityList.prototype, observerMixin);
+
+
+
+================================================
+FILE: src/public/js/webapp/command.js
+================================================
+import { ActivityList, Activity } from './classes.js';
+import { ActivityHistory } from './memento.js';
+import { ApiService } from './api-service.js';
+
+export class Command {
+  name;
+  args;
+  constructor(name, args = []) {
+    this.name = name;
+    this.args = args;
+  }
+}
+
+export const Commands = {
+  ADD: 'add',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  COMPLETE: 'complete',
+  CANCEL: 'cancel',
+  UNDO: 'undo',
+};
+
+export const CommandExecutor = {
+  async execute(command) {
+    const activityList = ActivityList.getInstance();
+    const DOM = globalThis.DOM;
+
+    switch (command.name) {
+      case Commands.ADD:
+        const activityType = DOM.activityType.value;
+        const activityTitle = DOM.activityTitle.value.trim();
+        const activityDate = DOM.activityDate.value;
+        const activityTime = DOM.activityTime.value;
+
+        if (activityTitle !== '' && activityDate && activityTime) {
+          const activityData = {
+            type: activityType,
+            title: activityTitle,
+            date: activityDate,
+            time: activityTime,
+            description: DOM.activityDescription.value.trim(),
+            location: DOM.activityLocation.value.trim(),
+            capacity: DOM.activityCapacity.value
+              ? Number.parseInt(DOM.activityCapacity.value)
+              : null,
+            createdAt: new Date().toISOString(),
+          };
+
+          // Set type-specific properties
+          if (activityType === 'workshop') {
+            activityData.presenter = DOM.workshopPresenter.value.trim();
+            activityData.materials = DOM.workshopMaterials.value.trim();
+          } else if (activityType === 'mentoring') {
+            activityData.mentor = DOM.mentoringMentorInput.value.trim();
+            activityData.mentee = DOM.mentoringMentee.value.trim();
+            activityData.focus = DOM.mentoringFocus.value.trim();
+          } else if (activityType === 'networking') {
+            activityData.format = DOM.networkingFormat.value;
+            activityData.partners = DOM.networkingPartners.value.trim();
+          }
+
+          try {
+            const newActivity = await ApiService.addActivity(activityData);
+            // Update local list
+            const activity = new Activity(
+              newActivity.type,
+              newActivity.title,
+              newActivity.date,
+              newActivity.time
+            );
+            Object.assign(activity, newActivity);
+            activityList.add(activity);
+
+            if (globalThis.showStatus) {
+              globalThis.showStatus('Activity created successfully');
+            }
+          } catch (error) {
+            console.error('Error creating activity:', error);
+            if (globalThis.showStatus) {
+              globalThis.showStatus('Failed to create activity', true);
+            }
+          }
+        }
+        break;
+
+      case Commands.UPDATE:
+        const [activityId] = command.args;
+        const activity = activityList.findById(activityId);
+
+        if (activity) {
+          const activityType = DOM.activityType.value;
+          const activityTitle = DOM.activityTitle.value.trim();
+          const activityDate = DOM.activityDate.value;
+          const activityTime = DOM.activityTime.value;
+
+          if (activityTitle !== '' && activityDate && activityTime) {
+            const data = {
+              title: activityTitle,
+              date: activityDate,
+              time: activityTime,
+              description: DOM.activityDescription.value.trim(),
+              location: DOM.activityLocation.value.trim(),
+              capacity: DOM.activityCapacity.value
+                ? Number.parseInt(DOM.activityCapacity.value)
+                : null,
+            };
+
+            // Add type-specific properties
+            if (activityType === 'workshop') {
+              data.presenter = DOM.workshopPresenter.value.trim();
+              data.materials = DOM.workshopMaterials.value.trim();
+            } else if (activityType === 'mentoring') {
+              data.mentor = DOM.mentoringMentorInput.value.trim();
+              data.mentee = DOM.mentoringMentee.value.trim();
+              data.focus = DOM.mentoringFocus.value.trim();
+            } else if (activityType === 'networking') {
+              data.format = DOM.networkingFormat.value;
+              data.partners = DOM.networkingPartners.value.trim();
+            }
+
+            try {
+              const updatedActivity = await ApiService.updateActivity({
+                ...activity,
+                ...data,
+              });
+              // Update local list
+              activityList.update(activityId, data);
+
+              if (globalThis.showStatus) {
+                globalThis.showStatus('Activity updated successfully');
+              }
+            } catch (error) {
+              console.error('Error updating activity:', error);
+              if (globalThis.showStatus) {
+                globalThis.showStatus('Failed to update activity', true);
+              }
+            }
+          }
+        }
+        break;
+
+      case Commands.DELETE:
+        const [idToDelete] = command.args;
+        try {
+          await ApiService.deleteActivity(idToDelete);
+          activityList.delete(idToDelete);
+
+          if (globalThis.showStatus) {
+            globalThis.showStatus('Activity deleted successfully');
+          }
+        } catch (error) {
+          console.error('Error deleting activity:', error);
+          if (globalThis.showStatus) {
+            globalThis.showStatus('Failed to delete activity', true);
+          }
+        }
+        break;
+
+      case Commands.COMPLETE:
+        const [idToComplete] = command.args;
+        ApiService.completeActivity(idToComplete)
+          .then(() => {
+            activityList.complete(idToComplete);
+          })
+          .catch(error => {
+            console.error('Error completing activity:', error);
+            // Show error message to user
+            if (globalThis.showStatus) {
+              globalThis.showStatus('Failed to complete activity', true);
+            }
+          });
+        break;
+
+      case Commands.CANCEL:
+        const [idToCancel] = command.args;
+        ApiService.cancelActivity(idToCancel)
+          .then(() => {
+            activityList.cancel(idToCancel);
+          })
+          .catch(error => {
+            console.error('Error cancelling activity:', error);
+            // Show error message to user
+            if (globalThis.showStatus) {
+              globalThis.showStatus('Failed to cancel activity', true);
+            }
+          });
+        break;
+
+      case Commands.UNDO:
+        const previousList = ActivityHistory.pop();
+        if (previousList) {
+          activityList.replaceList(previousList);
+        }
+        break;
+    }
+  },
+};
+
+
+
+================================================
+FILE: src/public/js/webapp/memento.js
+================================================
+import { ActivityList } from './classes.js';
+
+export const ActivityHistory = {
+  history: [],
+  push(state) {
+    if (state) {
+      this.history.push(new Set([...state]));
+      // Limit history size to prevent memory issues
+      if (this.history.length > 50) {
+        this.history.shift();
+      }
+    }
+  },
+  pop() {
+    if (this.history.length > 1) {
+      this.history.pop();
+      return this.history.pop();
+    }
+    return null;
+  },
+};
+
+ActivityList.getInstance().addObserver(() => {
+  ActivityHistory.push(ActivityList.getInstance().items);
+});
+
+
+
+================================================
+FILE: src/public/js/webapp/mixins.js
+================================================
+// Observer Design Pattern
+export const observerMixin = {
+  observers: new Set(),
+  addObserver(obs) {
+    this.observers.add(obs);
+  },
+  removeObserver(obs) {
+    this.observers.delete(obs);
+  },
+  notify() {
+    this.observers.forEach(obs => obs());
+  },
+};
+
+
+
+================================================
+FILE: src/public/js/webapp/storage.js
+================================================
+import { ActivityList, Activity } from './classes.js';
+
+const activityList = ActivityList.getInstance();
+
+export const LocalStorage = {
+  STORAGE_KEY: 'task_management_system_activities',
+
+  load() {
+    try {
+      if (localStorage.getItem(this.STORAGE_KEY)) {
+        const activities = JSON.parse(localStorage.getItem(this.STORAGE_KEY));
+
+        // Clear current list before loading
+        activityList.clear();
+
+        // Add each activity to the list
+        for (const a of activities) {
+          const activity = new Activity(a.type, a.title, a.date, a.time);
+
+          // Copy all properties
+          Object.keys(a).forEach(key => {
+            if (key !== 'id') {
+              // Preserve the original ID
+              activity[key] = a[key];
+            }
+          });
+
+          activityList.add(activity);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
+    }
+  },
+
+  save() {
+    try {
+      const array = activityList.toArray();
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(array));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  },
+};
+
+// Register observer to save on changes
+activityList.addObserver(LocalStorage.save.bind(LocalStorage));
+
+
+
+================================================
+FILE: src/routes/activityRoutes.js
+================================================
+const express = require('express');
+const router = express.Router();
+const { body } = require('express-validator');
+const activityController = require('../controllers/activityController');
+
+// Validation middleware
+const validateActivity = [
+  body('type').isIn(['workshop', 'mentoring', 'networking']).withMessage('Invalid activity type'),
+  body('title').notEmpty().trim().withMessage('Title is required'),
+  body('date').isISO8601().toDate().withMessage('Valid date is required'),
+  body('time')
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .withMessage('Valid time format required (HH:MM)'),
+  body('capacity').optional().isInt({ min: 0 }).withMessage('Capacity must be a positive number'),
+];
+
+// Routes
+router.get('/activities', activityController.getActivities);
+router.get('/activities/upcoming', activityController.getUpcomingActivities);
+router.get('/activities/recent', activityController.getRecentActivities);
+router.get('/activities/:id', activityController.getActivityById);
+router.post('/activities', validateActivity, activityController.createActivity);
+router.put('/activities/:id', activityController.updateActivity);
+router.delete('/activities/:id', activityController.deleteActivity);
+router.post('/activities/sync', activityController.syncActivities);
+router.post('/activities/:id/complete', activityController.completeActivity);
+router.post('/activities/:id/cancel', activityController.cancelActivity);
+
+// Additional endpoints
+router.get('/mentors', activityController.getMentors);
+router.get('/statistics', activityController.getStatistics);
+
+module.exports = router;
+
+
+
+================================================
+FILE: src/services/activityService.js
+================================================
+const Activity = require('../models/Activity');
+const logger = require('../utils/logger');
+
+class ActivityService {
+  // Generate unique ID for activities
+  static generateId() {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  }
+
+  // Create a new activity with validation
+  static async createActivity(activityData) {
+    try {
+      // Generate ID if not provided
+      if (!activityData.id) {
+        activityData.id = this.generateId();
+      }
+
+      // Set creation date if not provided
+      if (!activityData.createdAt) {
+        activityData.createdAt = new Date().toISOString();
+      }
+
+      const activity = new Activity(activityData);
+      await activity.save();
+
+      logger.info(`Activity created: ${activity.id} - ${activity.title}`);
+      return activity;
+    } catch (error) {
+      logger.error(`Error creating activity: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Get activities with advanced filtering
+  static async getActivities(filters = {}) {
+    try {
+      const query = this.buildQuery(filters);
+      logger.debug(query);
+      const activities = await Activity.find(query).sort({ date: 1, time: 1 });
+
+      logger.debug(`Retrieved ${activities.length} activities with filters:`, filters);
+      return activities;
+    } catch (error) {
+      logger.error(`Error fetching activities: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Build query object from filters
+  static buildQuery(filters) {
+    const query = {};
+    const { type, status, startDate, endDate, mentor, location, capacity } = filters;
+
+    if (type) {
+      query.type = type;
+    }
+
+    if (status) {
+      const STATUS_QUERIES = {
+        upcoming: {
+          completed: false,
+          cancelled: false,
+          date: { $gte: new Date().toISOString().split('T')[0] },
+        },
+        completed: {
+          completed: true,
+        },
+        cancelled: {
+          cancelled: true,
+        },
+        'past-due': {
+          completed: false,
+          cancelled: false,
+          date: { $lt: new Date().toISOString().split('T')[0] },
+        },
+      };
+      Object.assign(query, STATUS_QUERIES[status]);
+    }
+
+    if (startDate && endDate) {
+      query.date = { $gte: startDate, $lte: endDate };
+    } else if (startDate) {
+      query.date = { $gte: startDate };
+    } else if (endDate) {
+      query.date = { $lte: endDate };
+    }
+
+    if (mentor) {
+      query.mentor = new RegExp(mentor, 'i'); // Case-insensitive search
+    }
+
+    if (location) {
+      query.location = new RegExp(location, 'i');
+    }
+
+    if (capacity) {
+      query.capacity = { $gte: parseInt(capacity) };
+    }
+
+    return query;
+  }
+
+  // Update activity with business logic
+  static async updateActivity(id, updateData) {
+    try {
+      const activity = await Activity.findOne({ id });
+
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+
+      // Prevent certain updates based on status
+      if (activity.completed && updateData.date) {
+        throw new Error('Cannot change date of completed activity');
+      }
+
+      if (activity.cancelled && updateData.completed) {
+        throw new Error('Cannot complete a cancelled activity');
+      }
+
+      const updatedActivity = await Activity.findOneAndUpdate({ id }, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      logger.info(`Activity updated: ${id} - ${updatedActivity.title}`);
+      return updatedActivity;
+    } catch (error) {
+      logger.error(`Error updating activity ${id}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Complete activity with validation
+  static async completeActivity(id) {
+    try {
+      const activity = await Activity.findOne({ id });
+
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+
+      if (activity.cancelled) {
+        throw new Error('Cannot complete a cancelled activity');
+      }
+
+      if (activity.completed) {
+        throw new Error('Activity is already completed');
+      }
+
+      await activity.complete();
+      logger.info(`Activity completed: ${id} - ${activity.title}`);
+      return activity;
+    } catch (error) {
+      logger.error(`Error completing activity ${id}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Cancel activity with validation
+  static async cancelActivity(id) {
+    try {
+      const activity = await Activity.findOne({ id });
+
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+
+      if (activity.completed) {
+        throw new Error('Cannot cancel a completed activity');
+      }
+
+      if (activity.cancelled) {
+        throw new Error('Activity is already cancelled');
+      }
+
+      await activity.cancel();
+      logger.info(`Activity cancelled: ${id} - ${activity.title}`);
+      return activity;
+    } catch (error) {
+      logger.error(`Error cancelling activity ${id}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Bulk sync activities
+  static async syncActivities(activities) {
+    try {
+      if (!Array.isArray(activities)) {
+        throw new Error('Expected an array of activities');
+      }
+
+      const existingActivities = await Activity.find({}, 'id');
+      const existingIds = new Set(existingActivities.map(activity => activity.id));
+
+      const operations = [];
+      let newCount = 0;
+      let updateCount = 0;
+
+      for (const activity of activities) {
+        if (existingIds.has(activity.id)) {
+          operations.push({
+            updateOne: {
+              filter: { id: activity.id },
+              update: activity,
+              upsert: false,
+            },
+          });
+          updateCount++;
+        } else {
+          operations.push({
+            insertOne: {
+              document: activity,
+            },
+          });
+          newCount++;
+        }
+      }
+
+      if (operations.length > 0) {
+        await Activity.bulkWrite(operations);
+      }
+
+      logger.info(`Sync completed: ${newCount} new, ${updateCount} updated activities`);
+
+      const updatedActivities = await Activity.find().sort({
+        date: 1,
+        time: 1,
+      });
+      return updatedActivities;
+    } catch (error) {
+      logger.error(`Error syncing activities: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Get dashboard data
+  static async getDashboardData() {
+    try {
+      const [upcoming, recent, stats] = await Promise.all([
+        Activity.findUpcoming().limit(5),
+        Activity.findCompleted().limit(5),
+        Activity.getStatistics(),
+      ]);
+
+      return {
+        upcoming,
+        recent,
+        stats,
+      };
+    } catch (error) {
+      logger.error(`Error fetching dashboard data: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Get activities by type with additional filtering
+  static async getActivitiesByType(type, filters = {}) {
+    try {
+      const query = { type, ...this.buildQuery(filters) };
+      const activities = await Activity.find(query).sort({ date: 1, time: 1 });
+
+      logger.debug(`Retrieved ${activities.length} ${type} activities`);
+      return activities;
+    } catch (error) {
+      logger.error(`Error fetching ${type} activities: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Delete activity with validation
+  static async deleteActivity(id) {
+    try {
+      const activity = await Activity.findOneAndDelete({ id });
+
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+
+      logger.info(`Activity deleted: ${id} - ${activity.title}`);
+      return activity;
+    } catch (error) {
+      logger.error(`Error deleting activity ${id}: ${error.message}`);
+      throw error;
+    }
+  }
+}
+
+module.exports = ActivityService;
+
+
+
+================================================
+FILE: src/utils/logger.js
+================================================
+const winston = require('winston');
+
+// Define log levels
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  debug: 4,
+};
+
+// Define colors for each level
+const colors = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'green',
+  http: 'magenta',
+  debug: 'white',
+};
+
+// Tell winston that you want to link the colors
+winston.addColors(colors);
+
+// Define which level to log based on environment
+const level = () => {
+  const env = process.env.NODE_ENV || 'development';
+  const isDevelopment = env === 'development';
+  return isDevelopment ? 'debug' : 'warn';
+};
+
+// Define different log formats
+const format = winston.format.combine(
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  winston.format.colorize({ all: true }),
+  winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+);
+
+// Define which transports the logger must use
+const transports = [
+  // Console transport
+  new winston.transports.Console(),
+  // File transport for errors
+  new winston.transports.File({
+    filename: 'logs/error.log',
+    level: 'error',
+  }),
+  // File transport for all logs
+  new winston.transports.File({ filename: 'logs/all.log' }),
+];
+
+// Create the logger
+const logger = winston.createLogger({
+  level: level(),
+  levels,
+  format,
+  transports,
+});
+
+module.exports = logger;
+
+
+
+================================================
+FILE: .github/workflows/ci-cd.yml
+================================================
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PORT: 3000
+  NODE_VERSION: '18'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run lint and format
+        run: npm run lint && npm run format:check
+
+      - name: Run tests
+        run: npm test
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
+  build-docker:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: production
+          build-args: |
+            PORT=${{ env.PORT }}
+            NODE_ENV=production
+          tags: task-management-system:latest
+          load: true
+
+  deploy:
+    needs: [build-and-test, build-docker]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: production
+          build-args: |
+            PORT=${{ env.PORT }}
+            NODE_ENV=production
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/task-management-system:latest
+            ${{ secrets.DOCKER_USERNAME }}/task-management-system:${{ github.sha }}
+          push: true
+
+
+
+================================================
+FILE: .husky/pre-commit
+================================================
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
+
+
