@@ -1,15 +1,15 @@
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 
 // Error handling middleware
 const errorHandler = (err, _, res) => {
   logger.error(err.stack);
 
   // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const errors = Object.values(err.errors).map(e => e.message);
+  if (err.name === "ValidationError") {
+    const errors = Object.values(err.errors).map((e) => e.message);
     return res.status(400).json({
-      error: 'Validation Error',
-      details: errors
+      error: "Validation Error",
+      details: errors,
     });
   }
 
@@ -17,34 +17,34 @@ const errorHandler = (err, _, res) => {
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
     return res.status(400).json({
-      error: `Duplicate value for ${field}`
+      error: `Duplicate value for ${field}`,
     });
   }
 
   // Mongoose cast error
-  if (err.name === 'CastError') {
+  if (err.name === "CastError") {
     return res.status(400).json({
-      error: 'Invalid ID format'
+      error: "Invalid ID format",
     });
   }
 
   // JWT errors
-  if (err.name === 'JsonWebTokenError') {
+  if (err.name === "JsonWebTokenError") {
     return res.status(401).json({
-      error: 'Invalid token'
+      error: "Invalid token",
     });
   }
 
-  if (err.name === 'TokenExpiredError') {
+  if (err.name === "TokenExpiredError") {
     return res.status(401).json({
-      error: 'Token expired'
+      error: "Token expired",
     });
   }
 
   // Default error
   res.status(err.status || 500).json({
-    error: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    error: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 };
 
@@ -57,5 +57,5 @@ const notFound = (req, res, next) => {
 
 module.exports = {
   errorHandler,
-  notFound
-}; 
+  notFound,
+};
