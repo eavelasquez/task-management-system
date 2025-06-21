@@ -10,7 +10,7 @@ function testProjectStructure() {
     'src/server.js',
     'src/config/database.js',
     'src/models/Activity.js',
-    'package.json'
+    'package.json',
   ];
 
   for (const file of requiredFiles) {
@@ -115,4 +115,4 @@ module.exports = {
   testEnvironmentConfig,
   testBasicRequires,
   runUnitTests,
-}; 
+};
