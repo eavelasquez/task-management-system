@@ -46,8 +46,8 @@
     "lint-staged": "^13.0.0"
   },
   "engines": {
-    "node": ">=22.16.0",
-    "npm": ">=11.4.1"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
