@@ -1,4 +1,4 @@
-import { observerMixin } from "./mixins.js";
+import { observerMixin } from './mixins.js';
 
 // Generate a unique ID
 function generateId() {
@@ -18,21 +18,21 @@ export class Activity {
     this.completedDate = null;
 
     // Common properties
-    this.description = "";
-    this.location = "";
+    this.description = '';
+    this.location = '';
     this.capacity = null;
 
     // Type-specific properties
-    if (type === "workshop") {
-      this.presenter = "";
-      this.materials = "";
-    } else if (type === "mentoring") {
-      this.mentor = "";
-      this.mentee = "";
-      this.focus = "";
-    } else if (type === "networking") {
-      this.format = "mixer";
-      this.partners = "";
+    if (type === 'workshop') {
+      this.presenter = '';
+      this.materials = '';
+    } else if (type === 'mentoring') {
+      this.mentor = '';
+      this.mentee = '';
+      this.focus = '';
+    } else if (type === 'networking') {
+      this.format = 'mixer';
+      this.partners = '';
     }
   }
 
@@ -61,14 +61,14 @@ export class Activity {
     this.capacity = data.capacity || this.capacity;
 
     // Update type-specific properties
-    if (this.type === "workshop") {
+    if (this.type === 'workshop') {
       this.presenter = data.presenter || this.presenter;
       this.materials = data.materials || this.materials;
-    } else if (this.type === "mentoring") {
+    } else if (this.type === 'mentoring') {
       this.mentor = data.mentor || this.mentor;
       this.mentee = data.mentee || this.mentee;
       this.focus = data.focus || this.focus;
-    } else if (this.type === "networking") {
+    } else if (this.type === 'networking') {
       this.format = data.format || this.format;
       this.partners = data.partners || this.partners;
     }
@@ -94,14 +94,14 @@ export class ActivityList {
   }
   constructor() {
     if (ActivityList.instance) {
-      throw new Error("Use ActivityList.getInstance() instead.");
+      throw new Error('Use ActivityList.getInstance() instead.');
     }
   }
 
   // List Behavior
   add(activity) {
     const array = Array.from(this.#data);
-    const activityExists = array.filter((a) => a.equals(activity)).length > 0;
+    const activityExists = array.filter(a => a.equals(activity)).length > 0;
     if (!activityExists) {
       this.#data.add(activity);
       this.notify();
@@ -110,7 +110,7 @@ export class ActivityList {
 
   delete(activityId) {
     const array = Array.from(this.#data);
-    const activityToDelete = array.find((a) => a.id === activityId);
+    const activityToDelete = array.find(a => a.id === activityId);
     if (activityToDelete) {
       this.#data.delete(activityToDelete);
       this.notify();
@@ -119,7 +119,7 @@ export class ActivityList {
 
   findById(id) {
     const array = Array.from(this.#data);
-    return array.find((a) => a.id === id);
+    return array.find(a => a.id === id);
   }
 
   update(activityId, data) {
@@ -167,7 +167,7 @@ export class ActivityList {
     // Filter by date range if provided
     let filteredActivities = activities;
     if (startDate && endDate) {
-      filteredActivities = activities.filter((activity) => {
+      filteredActivities = activities.filter(activity => {
         return activity.date >= startDate && activity.date <= endDate;
       });
     }
@@ -191,7 +191,7 @@ export class ActivityList {
     let completed = 0;
 
     // Process activities
-    filteredActivities.forEach((activity) => {
+    filteredActivities.forEach(activity => {
       // Count by type
       countByType[activity.type]++;
 
@@ -212,8 +212,7 @@ export class ActivityList {
     });
 
     // Calculate completion rate
-    const completionRate =
-      completable > 0 ? (completed / completable) * 100 : 0;
+    const completionRate = completable > 0 ? (completed / completable) * 100 : 0;
 
     return {
       total: filteredActivities.length,

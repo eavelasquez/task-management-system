@@ -1,9 +1,9 @@
-import { ActivityList, Activity } from "./classes.js";
+import { ActivityList, Activity } from './classes.js';
 
 const activityList = ActivityList.getInstance();
 
 export const LocalStorage = {
-  STORAGE_KEY: "task_management_system_activities",
+  STORAGE_KEY: 'task_management_system_activities',
 
   load() {
     try {
@@ -18,8 +18,8 @@ export const LocalStorage = {
           const activity = new Activity(a.type, a.title, a.date, a.time);
 
           // Copy all properties
-          Object.keys(a).forEach((key) => {
-            if (key !== "id") {
+          Object.keys(a).forEach(key => {
+            if (key !== 'id') {
               // Preserve the original ID
               activity[key] = a[key];
             }
@@ -29,7 +29,7 @@ export const LocalStorage = {
         }
       }
     } catch (error) {
-      console.error("Error loading from localStorage:", error);
+      console.error('Error loading from localStorage:', error);
     }
   },
 
@@ -38,7 +38,7 @@ export const LocalStorage = {
       const array = activityList.toArray();
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(array));
     } catch (error) {
-      console.error("Error saving to localStorage:", error);
+      console.error('Error saving to localStorage:', error);
     }
   },
 };

@@ -1,6 +1,6 @@
-import { ActivityList, Activity } from "./classes.js";
+import { ActivityList, Activity } from './classes.js';
 
-const API_URL = "/api";
+const API_URL = '/api';
 
 export const ApiService = {
   async fetchActivities() {
@@ -22,8 +22,8 @@ export const ApiService = {
         const activity = new Activity(a.type, a.title, a.date, a.time);
 
         // Copy all properties
-        Object.keys(a).forEach((key) => {
-          if (key !== "id") {
+        Object.keys(a).forEach(key => {
+          if (key !== 'id') {
             // Preserve the original ID
             activity[key] = a[key];
           }
@@ -34,7 +34,7 @@ export const ApiService = {
 
       return data;
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      console.error('Error fetching activities:', error);
       throw error;
     }
   },
@@ -45,9 +45,9 @@ export const ApiService = {
       const activities = activityList.toArray();
 
       const response = await fetch(`${API_URL}/activities/sync`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(activities),
       });
@@ -59,7 +59,7 @@ export const ApiService = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error syncing activities:", error);
+      console.error('Error syncing activities:', error);
       throw error;
     }
   },
@@ -67,9 +67,9 @@ export const ApiService = {
   async addActivity(activity) {
     try {
       const response = await fetch(`${API_URL}/activities`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(activity),
       });
@@ -80,7 +80,7 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error adding activity:", error);
+      console.error('Error adding activity:', error);
       throw error;
     }
   },
@@ -88,9 +88,9 @@ export const ApiService = {
   async updateActivity(activity) {
     try {
       const response = await fetch(`${API_URL}/activities/${activity.id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(activity),
       });
@@ -101,7 +101,7 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error updating activity:", error);
+      console.error('Error updating activity:', error);
       throw error;
     }
   },
@@ -109,7 +109,7 @@ export const ApiService = {
   async deleteActivity(activityId) {
     try {
       const response = await fetch(`${API_URL}/activities/${activityId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       if (!response.ok) {
@@ -118,19 +118,16 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error deleting activity:", error);
+      console.error('Error deleting activity:', error);
       throw error;
     }
   },
 
   async completeActivity(activityId) {
     try {
-      const response = await fetch(
-        `${API_URL}/activities/${activityId}/complete`,
-        {
-          method: "POST",
-        },
-      );
+      const response = await fetch(`${API_URL}/activities/${activityId}/complete`, {
+        method: 'POST',
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -138,19 +135,16 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error completing activity:", error);
+      console.error('Error completing activity:', error);
       throw error;
     }
   },
 
   async cancelActivity(activityId) {
     try {
-      const response = await fetch(
-        `${API_URL}/activities/${activityId}/cancel`,
-        {
-          method: "POST",
-        },
-      );
+      const response = await fetch(`${API_URL}/activities/${activityId}/cancel`, {
+        method: 'POST',
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -158,16 +152,14 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error cancelling activity:", error);
+      console.error('Error cancelling activity:', error);
       throw error;
     }
   },
 
   async getUpcomingActivities(limit = 10) {
     try {
-      const response = await fetch(
-        `${API_URL}/activities/upcoming?limit=${limit}`,
-      );
+      const response = await fetch(`${API_URL}/activities/upcoming?limit=${limit}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -175,16 +167,14 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error fetching upcoming activities:", error);
+      console.error('Error fetching upcoming activities:', error);
       throw error;
     }
   },
 
   async getRecentActivities(limit = 10) {
     try {
-      const response = await fetch(
-        `${API_URL}/activities/recent?limit=${limit}`,
-      );
+      const response = await fetch(`${API_URL}/activities/recent?limit=${limit}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -192,7 +182,7 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error fetching recent activities:", error);
+      console.error('Error fetching recent activities:', error);
       throw error;
     }
   },
@@ -202,8 +192,8 @@ export const ApiService = {
       let url = `${API_URL}/statistics`;
       const params = new URLSearchParams();
 
-      if (startDate) params.append("startDate", startDate);
-      if (endDate) params.append("endDate", endDate);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
 
       if (params.toString()) {
         url += `?${params.toString()}`;
@@ -217,7 +207,7 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error fetching statistics:", error);
+      console.error('Error fetching statistics:', error);
       throw error;
     }
   },
@@ -232,7 +222,7 @@ export const ApiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Error fetching mentors:", error);
+      console.error('Error fetching mentors:', error);
       throw error;
     }
   },
@@ -240,9 +230,7 @@ export const ApiService = {
   async getActivitiesByType(type, filters = {}) {
     try {
       const params = new URLSearchParams({ type, ...filters });
-      const response = await fetch(
-        `${API_URL}/activities?${params.toString()}`,
-      );
+      const response = await fetch(`${API_URL}/activities?${params.toString()}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -265,7 +253,7 @@ export const ApiService = {
 
       return { upcoming, recent, stats };
     } catch (error) {
-      console.error("Error fetching dashboard data:", error);
+      console.error('Error fetching dashboard data:', error);
       throw error;
     }
   },

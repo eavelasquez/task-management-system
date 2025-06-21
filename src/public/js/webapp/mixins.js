@@ -8,6 +8,6 @@ export const observerMixin = {
     this.observers.delete(obs);
   },
   notify() {
-    this.observers.forEach((obs) => obs());
+    this.observers.forEach(obs => obs());
   },
 };

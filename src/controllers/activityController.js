@@ -1,7 +1,7 @@
-const ActivityService = require("../services/activityService");
-const Activity = require("../models/Activity");
-const { validationResult } = require("express-validator");
-const logger = require("../utils/logger");
+const ActivityService = require('../services/activityService');
+const Activity = require('../models/Activity');
+const { validationResult } = require('express-validator');
+const logger = require('../utils/logger');
 
 // Get all activities with optional filters
 exports.getActivities = async (req, res) => {
@@ -9,8 +9,8 @@ exports.getActivities = async (req, res) => {
     const activities = await ActivityService.getActivities(req.query);
     res.json(activities);
   } catch (error) {
-    logger.error("Error fetching activities:", error);
-    res.status(500).json({ error: "Failed to fetch activities" });
+    logger.error('Error fetching activities:', error);
+    res.status(500).json({ error: 'Failed to fetch activities' });
   }
 };
 
@@ -21,13 +21,13 @@ exports.getActivityById = async (req, res) => {
     const activity = await Activity.findOne({ id });
 
     if (!activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({ error: 'Activity not found' });
     }
 
     res.json(activity);
   } catch (error) {
-    logger.error("Error fetching activity:", error);
-    res.status(500).json({ error: "Failed to fetch activity" });
+    logger.error('Error fetching activity:', error);
+    res.status(500).json({ error: 'Failed to fetch activity' });
   }
 };
 
@@ -44,9 +44,7 @@ exports.createActivity = async (req, res) => {
     res.status(201).json(activity);
   } catch (error) {
     if (error.code === 11000) {
-      return res
-        .status(400)
-        .json({ error: "Activity with this ID already exists" });
+      return res.status(400).json({ error: 'Activity with this ID already exists' });
     }
     res.status(500).json({ error: error.message });
   }
@@ -59,7 +57,7 @@ exports.updateActivity = async (req, res) => {
     const activity = await ActivityService.updateActivity(id, req.body);
     res.json(activity);
   } catch (error) {
-    if (error.message === "Activity not found") {
+    if (error.message === 'Activity not found') {
       return res.status(404).json({ error: error.message });
     }
     res.status(500).json({ error: error.message });
@@ -71,9 +69,9 @@ exports.deleteActivity = async (req, res) => {
   try {
     const { id } = req.params;
     await ActivityService.deleteActivity(id);
-    res.json({ message: "Activity deleted successfully" });
+    res.json({ message: 'Activity deleted successfully' });
   } catch (error) {
-    if (error.message === "Activity not found") {
+    if (error.message === 'Activity not found') {
       return res.status(404).json({ error: error.message });
     }
     res.status(500).json({ error: error.message });
@@ -86,14 +84,12 @@ exports.syncActivities = async (req, res) => {
     const activities = req.body;
 
     if (!Array.isArray(activities)) {
-      return res.status(400).json({ error: "Expected an array of activities" });
+      return res.status(400).json({ error: 'Expected an array of activities' });
     }
 
     // Get all activity IDs from the database
-    const existingActivities = await Activity.find({}, "id");
-    const existingIds = new Set(
-      existingActivities.map((activity) => activity.id),
-    );
+    const existingActivities = await Activity.find({}, 'id');
+    const existingIds = new Set(existingActivities.map(activity => activity.id));
 
     // Process each activity
     const operations = [];
@@ -126,8 +122,8 @@ exports.syncActivities = async (req, res) => {
     const updatedActivities = await Activity.find().sort({ date: 1, time: 1 });
     res.json(updatedActivities);
   } catch (error) {
-    logger.error("Error syncing activities:", error);
-    res.status(500).json({ error: "Failed to sync activities" });
+    logger.error('Error syncing activities:', error);
+    res.status(500).json({ error: 'Failed to sync activities' });
   }
 };
 
@@ -138,20 +134,18 @@ exports.completeActivity = async (req, res) => {
     const activity = await Activity.findOne({ id });
 
     if (!activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({ error: 'Activity not found' });
     }
 
     if (activity.cancelled) {
-      return res
-        .status(400)
-        .json({ error: "Cannot complete a cancelled activity" });
+      return res.status(400).json({ error: 'Cannot complete a cancelled activity' });
     }
 
     await activity.complete();
     res.json(activity);
   } catch (error) {
-    logger.error("Error completing activity:", error);
-    res.status(500).json({ error: "Failed to complete activity" });
+    logger.error('Error completing activity:', error);
+    res.status(500).json({ error: 'Failed to complete activity' });
   }
 };
 
@@ -162,36 +156,30 @@ exports.cancelActivity = async (req, res) => {
     const activity = await Activity.findOne({ id });
 
     if (!activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({ error: 'Activity not found' });
     }
 
     if (activity.completed) {
-      return res
-        .status(400)
-        .json({ error: "Cannot cancel a completed activity" });
+      return res.status(400).json({ error: 'Cannot cancel a completed activity' });
     }
 
     await activity.cancel();
     res.json(activity);
   } catch (error) {
-    logger.error("Error cancelling activity:", error);
-    res.status(500).json({ error: "Failed to cancel activity" });
+    logger.error('Error cancelling activity:', error);
+    res.status(500).json({ error: 'Failed to cancel activity' });
   }
 };
 
 // Get unique mentors
 exports.getMentors = async (req, res) => {
   try {
-    const mentoringSessions = await Activity.find({ type: "mentoring" });
-    const mentors = [
-      ...new Set(
-        mentoringSessions.map((session) => session.mentor).filter(Boolean),
-      ),
-    ];
+    const mentoringSessions = await Activity.find({ type: 'mentoring' });
+    const mentors = [...new Set(mentoringSessions.map(session => session.mentor).filter(Boolean))];
     res.json(mentors);
   } catch (error) {
-    logger.error("Error fetching mentors:", error);
-    res.status(500).json({ error: "Failed to fetch mentors" });
+    logger.error('Error fetching mentors:', error);
+    res.status(500).json({ error: 'Failed to fetch mentors' });
   }
 };
 
@@ -202,8 +190,8 @@ exports.getStatistics = async (req, res) => {
     const stats = await Activity.getStatistics(startDate, endDate);
     res.json(stats);
   } catch (error) {
-    logger.error("Error fetching statistics:", error);
-    res.status(500).json({ error: "Failed to fetch statistics" });
+    logger.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Failed to fetch statistics' });
   }
 };
 
@@ -214,8 +202,8 @@ exports.getUpcomingActivities = async (req, res) => {
     const activities = await Activity.findUpcoming().limit(parseInt(limit));
     res.json(activities);
   } catch (error) {
-    logger.error("Error fetching upcoming activities:", error);
-    res.status(500).json({ error: "Failed to fetch upcoming activities" });
+    logger.error('Error fetching upcoming activities:', error);
+    res.status(500).json({ error: 'Failed to fetch upcoming activities' });
   }
 };
 
@@ -226,7 +214,7 @@ exports.getRecentActivities = async (req, res) => {
     const activities = await Activity.findCompleted().limit(parseInt(limit));
     res.json(activities);
   } catch (error) {
-    logger.error("Error fetching recent activities:", error);
-    res.status(500).json({ error: "Failed to fetch recent activities" });
+    logger.error('Error fetching recent activities:', error);
+    res.status(500).json({ error: 'Failed to fetch recent activities' });
   }
 };

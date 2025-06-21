@@ -1,4 +1,4 @@
-import { ActivityList } from "./classes.js";
+import { ActivityList } from './classes.js';
 
 export const ChartRenderer = {
   // Render activity distribution chart

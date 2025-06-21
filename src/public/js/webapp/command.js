@@ -1,6 +1,6 @@
-import { ActivityList, Activity } from "./classes.js";
-import { ActivityHistory } from "./memento.js";
-import { ApiService } from "./api-service.js";
+import { ActivityList, Activity } from './classes.js';
+import { ActivityHistory } from './memento.js';
+import { ApiService } from './api-service.js';
 
 export class Command {
   name;
@@ -12,12 +12,12 @@ export class Command {
 }
 
 export const Commands = {
-  ADD: "add",
-  UPDATE: "update",
-  DELETE: "delete",
-  COMPLETE: "complete",
-  CANCEL: "cancel",
-  UNDO: "undo",
+  ADD: 'add',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  COMPLETE: 'complete',
+  CANCEL: 'cancel',
+  UNDO: 'undo',
 };
 
 export const CommandExecutor = {
@@ -32,7 +32,7 @@ export const CommandExecutor = {
         const activityDate = DOM.activityDate.value;
         const activityTime = DOM.activityTime.value;
 
-        if (activityTitle !== "" && activityDate && activityTime) {
+        if (activityTitle !== '' && activityDate && activityTime) {
           const activityData = {
             type: activityType,
             title: activityTitle,
@@ -47,14 +47,14 @@ export const CommandExecutor = {
           };
 
           // Set type-specific properties
-          if (activityType === "workshop") {
+          if (activityType === 'workshop') {
             activityData.presenter = DOM.workshopPresenter.value.trim();
             activityData.materials = DOM.workshopMaterials.value.trim();
-          } else if (activityType === "mentoring") {
+          } else if (activityType === 'mentoring') {
             activityData.mentor = DOM.mentoringMentorInput.value.trim();
             activityData.mentee = DOM.mentoringMentee.value.trim();
             activityData.focus = DOM.mentoringFocus.value.trim();
-          } else if (activityType === "networking") {
+          } else if (activityType === 'networking') {
             activityData.format = DOM.networkingFormat.value;
             activityData.partners = DOM.networkingPartners.value.trim();
           }
@@ -66,18 +66,18 @@ export const CommandExecutor = {
               newActivity.type,
               newActivity.title,
               newActivity.date,
-              newActivity.time,
+              newActivity.time
             );
             Object.assign(activity, newActivity);
             activityList.add(activity);
 
             if (globalThis.showStatus) {
-              globalThis.showStatus("Activity created successfully");
+              globalThis.showStatus('Activity created successfully');
             }
           } catch (error) {
-            console.error("Error creating activity:", error);
+            console.error('Error creating activity:', error);
             if (globalThis.showStatus) {
-              globalThis.showStatus("Failed to create activity", true);
+              globalThis.showStatus('Failed to create activity', true);
             }
           }
         }
@@ -93,7 +93,7 @@ export const CommandExecutor = {
           const activityDate = DOM.activityDate.value;
           const activityTime = DOM.activityTime.value;
 
-          if (activityTitle !== "" && activityDate && activityTime) {
+          if (activityTitle !== '' && activityDate && activityTime) {
             const data = {
               title: activityTitle,
               date: activityDate,
@@ -106,14 +106,14 @@ export const CommandExecutor = {
             };
 
             // Add type-specific properties
-            if (activityType === "workshop") {
+            if (activityType === 'workshop') {
               data.presenter = DOM.workshopPresenter.value.trim();
               data.materials = DOM.workshopMaterials.value.trim();
-            } else if (activityType === "mentoring") {
+            } else if (activityType === 'mentoring') {
               data.mentor = DOM.mentoringMentorInput.value.trim();
               data.mentee = DOM.mentoringMentee.value.trim();
               data.focus = DOM.mentoringFocus.value.trim();
-            } else if (activityType === "networking") {
+            } else if (activityType === 'networking') {
               data.format = DOM.networkingFormat.value;
               data.partners = DOM.networkingPartners.value.trim();
             }
@@ -127,12 +127,12 @@ export const CommandExecutor = {
               activityList.update(activityId, data);
 
               if (globalThis.showStatus) {
-                globalThis.showStatus("Activity updated successfully");
+                globalThis.showStatus('Activity updated successfully');
               }
             } catch (error) {
-              console.error("Error updating activity:", error);
+              console.error('Error updating activity:', error);
               if (globalThis.showStatus) {
-                globalThis.showStatus("Failed to update activity", true);
+                globalThis.showStatus('Failed to update activity', true);
               }
             }
           }
@@ -146,12 +146,12 @@ export const CommandExecutor = {
           activityList.delete(idToDelete);
 
           if (globalThis.showStatus) {
-            globalThis.showStatus("Activity deleted successfully");
+            globalThis.showStatus('Activity deleted successfully');
           }
         } catch (error) {
-          console.error("Error deleting activity:", error);
+          console.error('Error deleting activity:', error);
           if (globalThis.showStatus) {
-            globalThis.showStatus("Failed to delete activity", true);
+            globalThis.showStatus('Failed to delete activity', true);
           }
         }
         break;
@@ -162,11 +162,11 @@ export const CommandExecutor = {
           .then(() => {
             activityList.complete(idToComplete);
           })
-          .catch((error) => {
-            console.error("Error completing activity:", error);
+          .catch(error => {
+            console.error('Error completing activity:', error);
             // Show error message to user
             if (globalThis.showStatus) {
-              globalThis.showStatus("Failed to complete activity", true);
+              globalThis.showStatus('Failed to complete activity', true);
             }
           });
         break;
@@ -177,11 +177,11 @@ export const CommandExecutor = {
           .then(() => {
             activityList.cancel(idToCancel);
           })
-          .catch((error) => {
-            console.error("Error cancelling activity:", error);
+          .catch(error => {
+            console.error('Error cancelling activity:', error);
             // Show error message to user
             if (globalThis.showStatus) {
-              globalThis.showStatus("Failed to cancel activity", true);
+              globalThis.showStatus('Failed to cancel activity', true);
             }
           });
         break;

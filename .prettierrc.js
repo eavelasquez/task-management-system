@@ -1,35 +1,34 @@
 module.exports = {
   semi: true,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   singleQuote: true,
-  doubleQuote: false,
   tabWidth: 2,
   useTabs: false,
   printWidth: 100,
   bracketSpacing: true,
   bracketSameLine: false,
-  arrowParens: "avoid",
-  quoteProps: "as-needed",
-  endOfLine: "lf",
-  embeddedLanguageFormatting: "auto",
-  htmlWhitespaceSensitivity: "css",
+  arrowParens: 'avoid',
+  quoteProps: 'as-needed',
+  endOfLine: 'lf',
+  embeddedLanguageFormatting: 'auto',
+  htmlWhitespaceSensitivity: 'css',
   vueIndentScriptAndStyle: false,
   overrides: [
     {
-      files: "*.json",
+      files: '*.json',
       options: {
         printWidth: 80,
       },
     },
     {
-      files: "*.md",
+      files: '*.md',
       options: {
         printWidth: 80,
-        proseWrap: "always",
+        proseWrap: 'always',
       },
     },
     {
-      files: "*.yml",
+      files: '*.yml',
       options: {
         tabWidth: 2,
       },

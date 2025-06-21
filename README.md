@@ -1,12 +1,15 @@
 # Task Management System
 
-A comprehensive task management system for activities, workshops, mentoring sessions, and networking events. Built with Node.js, Express, MongoDB, and vanilla JavaScript frontend.
+A comprehensive task management system for activities, workshops, mentoring
+sessions, and networking events. Built with Node.js, Express, MongoDB, and
+vanilla JavaScript frontend.
 
 ![Opengraph Image](src/public/img/opengraph-image.png)
 
 ## 🏗️ Architecture
 
-This application follows a **monolithic architecture** with clear separation of concerns:
+This application follows a **monolithic architecture** with clear separation of
+concerns:
 
 ```
 src/
@@ -76,9 +79,9 @@ src/
 
 ### Prerequisites
 
-- Node.js >= 22.16.0
+- Node.js >= 18.0.0
 - MongoDB >= 7.0.0
-- npm >= 11.4.1
+- npm >= 9.0.0
 
 ### Setup
 
@@ -95,8 +98,7 @@ src/
    npm install
    ```
 
-3. **Environment Configuration**
-   Create a `.env` file in the root directory:
+3. **Environment Configuration** Create a `.env` file in the root directory:
 
    ```env
    # Server Configuration
@@ -280,6 +282,32 @@ npm test
 # Run linting
 npm run lint
 ```
+
+## 🎨 Code Formatting
+
+This project uses **Prettier** for consistent code formatting and **ESLint** for
+code quality.
+
+### Quick Start
+
+```bash
+# Format all files
+npm run format
+
+# Check formatting (used in CI)
+npm run format:check
+
+# Fix linting issues
+npm run lint:fix
+```
+
+### Pre-commit Hooks
+
+Automatic formatting and linting on commit via Husky:
+
+- ESLint fixes auto-fixable issues
+- Prettier formats staged files
+- Commit fails if there are unfixable issues
 
 ## 📈 Performance Considerations
 

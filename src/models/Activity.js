@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema(
   {
@@ -10,7 +10,7 @@ const activitySchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["workshop", "mentoring", "networking"],
+      enum: ['workshop', 'mentoring', 'networking'],
     },
     title: {
       type: String,
@@ -27,12 +27,12 @@ const activitySchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
     location: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
     capacity: {
@@ -60,41 +60,41 @@ const activitySchema = new mongoose.Schema(
     // Workshop specific fields
     presenter: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
     materials: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
 
     // Mentoring specific fields
     mentor: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
     mentee: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
     focus: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
 
     // Networking specific fields
     format: {
       type: String,
-      default: "mixer",
-      enum: ["mixer", "roundtable", "speed-networking", "panel", "other"],
+      default: 'mixer',
+      enum: ['mixer', 'roundtable', 'speed-networking', 'panel', 'other'],
     },
     partners: {
       type: String,
-      default: "",
+      default: '',
       trim: true,
     },
   },
@@ -102,7 +102,7 @@ const activitySchema = new mongoose.Schema(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  },
+  }
 );
 
 // Indexes for better query performance
@@ -111,7 +111,7 @@ activitySchema.index({ completed: 1, cancelled: 1 });
 activitySchema.index({ date: 1 });
 
 // Virtual for checking if activity is upcoming
-activitySchema.virtual("isUpcoming").get(function () {
+activitySchema.virtual('isUpcoming').get(function () {
   const activityDate = new Date(this.date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -119,7 +119,7 @@ activitySchema.virtual("isUpcoming").get(function () {
 });
 
 // Virtual for checking if activity is past due
-activitySchema.virtual("isPastDue").get(function () {
+activitySchema.virtual('isPastDue').get(function () {
   const activityDate = new Date(this.date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -144,7 +144,7 @@ activitySchema.statics.findByType = function (type) {
 };
 
 activitySchema.statics.findUpcoming = function () {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split('T')[0];
   return this.find({
     date: { $gte: today },
     completed: false,
@@ -182,7 +182,7 @@ activitySchema.statics.getStatistics = async function (startDate, endDate) {
   let completable = 0;
   let completed = 0;
 
-  activities.forEach((activity) => {
+  activities.forEach(activity => {
     // Count by type
     stats.byType[activity.type]++;
 
@@ -208,6 +208,6 @@ activitySchema.statics.getStatistics = async function (startDate, endDate) {
   return stats;
 };
 
-const Activity = mongoose.model("Activity", activitySchema);
+const Activity = mongoose.model('Activity', activitySchema);
 
 module.exports = Activity;

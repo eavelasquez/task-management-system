@@ -1,5 +1,5 @@
-const Activity = require("../models/Activity");
-const logger = require("../utils/logger");
+const Activity = require('../models/Activity');
+const logger = require('../utils/logger');
 
 class ActivityService {
   // Generate unique ID for activities
@@ -38,10 +38,7 @@ class ActivityService {
       logger.debug(query);
       const activities = await Activity.find(query).sort({ date: 1, time: 1 });
 
-      logger.debug(
-        `Retrieved ${activities.length} activities with filters:`,
-        filters,
-      );
+      logger.debug(`Retrieved ${activities.length} activities with filters:`, filters);
       return activities;
     } catch (error) {
       logger.error(`Error fetching activities: ${error.message}`);
@@ -52,8 +49,7 @@ class ActivityService {
   // Build query object from filters
   static buildQuery(filters) {
     const query = {};
-    const { type, status, startDate, endDate, mentor, location, capacity } =
-      filters;
+    const { type, status, startDate, endDate, mentor, location, capacity } = filters;
 
     if (type) {
       query.type = type;
@@ -64,7 +60,7 @@ class ActivityService {
         upcoming: {
           completed: false,
           cancelled: false,
-          date: { $gte: new Date().toISOString().split("T")[0] },
+          date: { $gte: new Date().toISOString().split('T')[0] },
         },
         completed: {
           completed: true,
@@ -72,10 +68,10 @@ class ActivityService {
         cancelled: {
           cancelled: true,
         },
-        "past-due": {
+        'past-due': {
           completed: false,
           cancelled: false,
-          date: { $lt: new Date().toISOString().split("T")[0] },
+          date: { $lt: new Date().toISOString().split('T')[0] },
         },
       };
       Object.assign(query, STATUS_QUERIES[status]);
@@ -90,11 +86,11 @@ class ActivityService {
     }
 
     if (mentor) {
-      query.mentor = new RegExp(mentor, "i"); // Case-insensitive search
+      query.mentor = new RegExp(mentor, 'i'); // Case-insensitive search
     }
 
     if (location) {
-      query.location = new RegExp(location, "i");
+      query.location = new RegExp(location, 'i');
     }
 
     if (capacity) {
@@ -110,23 +106,22 @@ class ActivityService {
       const activity = await Activity.findOne({ id });
 
       if (!activity) {
-        throw new Error("Activity not found");
+        throw new Error('Activity not found');
       }
 
       // Prevent certain updates based on status
       if (activity.completed && updateData.date) {
-        throw new Error("Cannot change date of completed activity");
+        throw new Error('Cannot change date of completed activity');
       }
 
       if (activity.cancelled && updateData.completed) {
-        throw new Error("Cannot complete a cancelled activity");
+        throw new Error('Cannot complete a cancelled activity');
       }
 
-      const updatedActivity = await Activity.findOneAndUpdate(
-        { id },
-        updateData,
-        { new: true, runValidators: true },
-      );
+      const updatedActivity = await Activity.findOneAndUpdate({ id }, updateData, {
+        new: true,
+        runValidators: true,
+      });
 
       logger.info(`Activity updated: ${id} - ${updatedActivity.title}`);
       return updatedActivity;
@@ -142,15 +137,15 @@ class ActivityService {
       const activity = await Activity.findOne({ id });
 
       if (!activity) {
-        throw new Error("Activity not found");
+        throw new Error('Activity not found');
       }
 
       if (activity.cancelled) {
-        throw new Error("Cannot complete a cancelled activity");
+        throw new Error('Cannot complete a cancelled activity');
       }
 
       if (activity.completed) {
-        throw new Error("Activity is already completed");
+        throw new Error('Activity is already completed');
       }
 
       await activity.complete();
@@ -168,15 +163,15 @@ class ActivityService {
       const activity = await Activity.findOne({ id });
 
       if (!activity) {
-        throw new Error("Activity not found");
+        throw new Error('Activity not found');
       }
 
       if (activity.completed) {
-        throw new Error("Cannot cancel a completed activity");
+        throw new Error('Cannot cancel a completed activity');
       }
 
       if (activity.cancelled) {
-        throw new Error("Activity is already cancelled");
+        throw new Error('Activity is already cancelled');
       }
 
       await activity.cancel();
@@ -192,13 +187,11 @@ class ActivityService {
   static async syncActivities(activities) {
     try {
       if (!Array.isArray(activities)) {
-        throw new Error("Expected an array of activities");
+        throw new Error('Expected an array of activities');
       }
 
-      const existingActivities = await Activity.find({}, "id");
-      const existingIds = new Set(
-        existingActivities.map((activity) => activity.id),
-      );
+      const existingActivities = await Activity.find({}, 'id');
+      const existingIds = new Set(existingActivities.map(activity => activity.id));
 
       const operations = [];
       let newCount = 0;
@@ -228,9 +221,7 @@ class ActivityService {
         await Activity.bulkWrite(operations);
       }
 
-      logger.info(
-        `Sync completed: ${newCount} new, ${updateCount} updated activities`,
-      );
+      logger.info(`Sync completed: ${newCount} new, ${updateCount} updated activities`);
 
       const updatedActivities = await Activity.find().sort({
         date: 1,
@@ -283,7 +274,7 @@ class ActivityService {
       const activity = await Activity.findOneAndDelete({ id });
 
       if (!activity) {
-        throw new Error("Activity not found");
+        throw new Error('Activity not found');
       }
 
       logger.info(`Activity deleted: ${id} - ${activity.title}`);

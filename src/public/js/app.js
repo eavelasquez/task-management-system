@@ -1,29 +1,29 @@
-import { ActivityList } from "./webapp/classes.js";
-import { CommandExecutor, Command, Commands } from "./webapp/command.js";
-import { LocalStorage } from "./webapp/storage.js";
-import { ApiService } from "./webapp/api-service.js";
-import { ChartRenderer } from "./webapp/chart-renderer.js";
+import { ActivityList } from './webapp/classes.js';
+import { CommandExecutor, Command, Commands } from './webapp/command.js';
+import { LocalStorage } from './webapp/storage.js';
+import { ApiService } from './webapp/api-service.js';
+import { ChartRenderer } from './webapp/chart-renderer.js';
 
 // Global DOM references
 globalThis.DOM = {};
 const DOM = globalThis.DOM;
 
 // Current view
-let currentView = "dashboard";
+let currentView = 'dashboard';
 
 // Show status message
 function showStatus(message, isError = false) {
   DOM.statusMessage.textContent = message;
-  DOM.statusMessage.classList.add("show");
+  DOM.statusMessage.classList.add('show');
 
   if (isError) {
-    DOM.statusMessage.style.backgroundColor = "#ef4444";
+    DOM.statusMessage.style.backgroundColor = '#ef4444';
   } else {
-    DOM.statusMessage.style.backgroundColor = "#10b981";
+    DOM.statusMessage.style.backgroundColor = '#10b981';
   }
 
   setTimeout(() => {
-    DOM.statusMessage.classList.remove("show");
+    DOM.statusMessage.classList.remove('show');
   }, 3000);
 }
 
@@ -32,17 +32,14 @@ globalThis.showStatus = showStatus;
 
 // Format date for display
 function formatDate(dateString) {
-  const options = { year: "numeric", month: "short", day: "numeric" };
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
   return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
 // Format time for display
 function formatTime(timeString) {
-  const options = { hour: "2-digit", minute: "2-digit" };
-  return new Date(`2000-01-01T${timeString}`).toLocaleTimeString(
-    undefined,
-    options,
-  );
+  const options = { hour: '2-digit', minute: '2-digit' };
+  return new Date(`2000-01-01T${timeString}`).toLocaleTimeString(undefined, options);
 }
 
 // Render upcoming activities in dashboard
@@ -53,7 +50,7 @@ async function renderUpcomingActivities() {
   try {
     const upcoming = await ApiService.getUpcomingActivities(5);
 
-    upcomingList.innerHTML = "";
+    upcomingList.innerHTML = '';
 
     if (upcoming.length === 0) {
       upcomingList.innerHTML = `<div class="empty-state">No upcoming activities</div>`;
@@ -61,8 +58,8 @@ async function renderUpcomingActivities() {
     }
 
     for (const activity of upcoming) {
-      const activityItem = document.createElement("div");
-      activityItem.className = "activity-item";
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
       activityItem.dataset.id = activity.id;
 
       activityItem.innerHTML = `
@@ -87,7 +84,7 @@ async function renderUpcomingActivities() {
       upcomingList.appendChild(activityItem);
     }
   } catch (error) {
-    console.error("Error loading upcoming activities:", error);
+    console.error('Error loading upcoming activities:', error);
     upcomingList.innerHTML = `<div class="error-state">Failed to load upcoming activities</div>`;
   }
 }
@@ -100,7 +97,7 @@ async function renderRecentActivities() {
   try {
     const recent = await ApiService.getRecentActivities(5);
 
-    recentList.innerHTML = "";
+    recentList.innerHTML = '';
 
     if (recent.length === 0) {
       recentList.innerHTML = `<div class="empty-state">No recent activities</div>`;
@@ -108,8 +105,8 @@ async function renderRecentActivities() {
     }
 
     for (const activity of recent) {
-      const activityItem = document.createElement("div");
-      activityItem.className = "activity-item";
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
       activityItem.dataset.id = activity.id;
 
       activityItem.innerHTML = `
@@ -131,7 +128,7 @@ async function renderRecentActivities() {
       recentList.appendChild(activityItem);
     }
   } catch (error) {
-    console.error("Error loading recent activities:", error);
+    console.error('Error loading recent activities:', error);
     recentList.innerHTML = `<div class="error-state">Failed to load recent activities</div>`;
   }
 }
@@ -149,10 +146,10 @@ async function renderWorkshops() {
 
     // Build filter object
     const filters = {
-      type: "workshop",
+      type: 'workshop',
     };
 
-    if (statusFilter !== "all") {
+    if (statusFilter !== 'all') {
       filters.status = statusFilter;
     }
 
@@ -165,9 +162,9 @@ async function renderWorkshops() {
     }
 
     // Fetch workshops from API
-    const workshops = await ApiService.getActivitiesByType("workshop", filters);
+    const workshops = await ApiService.getActivitiesByType('workshop', filters);
 
-    workshopsGrid.innerHTML = "";
+    workshopsGrid.innerHTML = '';
 
     if (workshops.length === 0) {
       workshopsGrid.innerHTML = `<div class="empty-state">No workshops found</div>`;
@@ -175,19 +172,19 @@ async function renderWorkshops() {
     }
 
     for (const workshop of workshops) {
-      const workshopCard = document.createElement("div");
-      workshopCard.className = "workshop-card";
+      const workshopCard = document.createElement('div');
+      workshopCard.className = 'workshop-card';
       workshopCard.dataset.id = workshop.id;
 
-      let statusClass = "status-upcoming";
-      let statusText = "Upcoming";
+      let statusClass = 'status-upcoming';
+      let statusText = 'Upcoming';
 
       if (workshop.cancelled) {
-        statusClass = "status-cancelled";
-        statusText = "Cancelled";
+        statusClass = 'status-cancelled';
+        statusText = 'Cancelled';
       } else if (workshop.completed) {
-        statusClass = "status-completed";
-        statusText = "Completed";
+        statusClass = 'status-completed';
+        statusText = 'Completed';
       }
 
       workshopCard.innerHTML = `
@@ -199,16 +196,16 @@ async function renderWorkshops() {
         </div>
       </div>
       <div class="workshop-body">
-        <p class="workshop-description">${workshop.description || "No description provided."}</p>
+        <p class="workshop-description">${workshop.description || 'No description provided.'}</p>
         <div class="workshop-details">
           <span class="detail-label">Presenter:</span>
-          <span>${workshop.presenter || "Not specified"}</span>
+          <span>${workshop.presenter || 'Not specified'}</span>
           
           <span class="detail-label">Location:</span>
-          <span>${workshop.location || "Not specified"}</span>
+          <span>${workshop.location || 'Not specified'}</span>
           
           <span class="detail-label">Capacity:</span>
-          <span>${workshop.capacity || "Unlimited"}</span>
+          <span>${workshop.capacity || 'Unlimited'}</span>
         </div>
       </div>
       <div class="workshop-footer">
@@ -224,7 +221,7 @@ async function renderWorkshops() {
               <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
             </button>
           `
-              : ""
+              : ''
           }
           ${
             !workshop.cancelled
@@ -233,7 +230,7 @@ async function renderWorkshops() {
               <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
           `
-              : ""
+              : ''
           }
         </div>
       </div>
@@ -242,7 +239,7 @@ async function renderWorkshops() {
       workshopsGrid.appendChild(workshopCard);
     }
   } catch (error) {
-    console.error("Error loading workshops:", error);
+    console.error('Error loading workshops:', error);
     workshopsGrid.innerHTML = `<div class="error-state">Failed to load workshops</div>`;
   }
 }
@@ -251,7 +248,7 @@ async function renderWorkshops() {
 function renderMentoringSessions() {
   const activities = ActivityList.getInstance();
   const mentoringList = DOM.mentoringList;
-  mentoringList.innerHTML = "";
+  mentoringList.innerHTML = '';
 
   // Get filter values
   const statusFilter = DOM.mentoringStatus.value;
@@ -259,24 +256,20 @@ function renderMentoringSessions() {
 
   // Filter mentoring sessions
   const mentoringSessions = Array.from(activities.items)
-    .filter((activity) => {
+    .filter(activity => {
       // Filter by type
-      if (activity.type !== "mentoring") return false;
+      if (activity.type !== 'mentoring') return false;
 
       // Filter by status
-      if (statusFilter !== "all") {
-        if (
-          statusFilter === "scheduled" &&
-          (activity.completed || activity.cancelled)
-        )
+      if (statusFilter !== 'all') {
+        if (statusFilter === 'scheduled' && (activity.completed || activity.cancelled))
           return false;
-        if (statusFilter === "completed" && !activity.completed) return false;
-        if (statusFilter === "cancelled" && !activity.cancelled) return false;
+        if (statusFilter === 'completed' && !activity.completed) return false;
+        if (statusFilter === 'cancelled' && !activity.cancelled) return false;
       }
 
       // Filter by mentor
-      if (mentorFilter !== "all" && activity.mentor !== mentorFilter)
-        return false;
+      if (mentorFilter !== 'all' && activity.mentor !== mentorFilter) return false;
 
       return true;
     })
@@ -290,15 +283,15 @@ function renderMentoringSessions() {
   for (const session of mentoringSessions) {
     const sessionDate = new Date(session.date);
     const day = sessionDate.getDate();
-    const month = sessionDate.toLocaleString("default", { month: "short" });
+    const month = sessionDate.toLocaleString('default', { month: 'short' });
 
-    const mentoringItem = document.createElement("div");
-    mentoringItem.className = "mentoring-item";
+    const mentoringItem = document.createElement('div');
+    mentoringItem.className = 'mentoring-item';
     mentoringItem.dataset.id = session.id;
 
-    let statusClass = "";
-    if (session.cancelled) statusClass = "cancelled";
-    else if (session.completed) statusClass = "completed";
+    let statusClass = '';
+    if (session.cancelled) statusClass = 'cancelled';
+    else if (session.completed) statusClass = 'completed';
 
     mentoringItem.innerHTML = `
       <div class="mentoring-date">
@@ -311,15 +304,15 @@ function renderMentoringSessions() {
         <div class="mentoring-participants">
           <div class="mentor">
             <span class="mentor-label">Mentor:</span>
-            <span>${session.mentor || "Not assigned"}</span>
+            <span>${session.mentor || 'Not assigned'}</span>
           </div>
           <div class="mentee">
             <span class="mentee-label">Mentee:</span>
-            <span>${session.mentee || "Not assigned"}</span>
+            <span>${session.mentee || 'Not assigned'}</span>
           </div>
         </div>
         <div class="mentoring-focus">
-          <strong>Focus:</strong> ${session.focus || "General mentoring"}
+          <strong>Focus:</strong> ${session.focus || 'General mentoring'}
         </div>
       </div>
       <div class="mentoring-actions">
@@ -333,7 +326,7 @@ function renderMentoringSessions() {
             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
           </button>
         `
-            : ""
+            : ''
         }
         ${
           !session.cancelled
@@ -342,7 +335,7 @@ function renderMentoringSessions() {
             <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
           </button>
         `
-            : ""
+            : ''
         }
       </div>
     `;
@@ -355,7 +348,7 @@ function renderMentoringSessions() {
 function renderNetworkingEvents() {
   const activities = ActivityList.getInstance();
   const networkingGrid = DOM.networkingGrid;
-  networkingGrid.innerHTML = "";
+  networkingGrid.innerHTML = '';
 
   // Get filter values
   const statusFilter = DOM.networkingStatus.value;
@@ -363,23 +356,19 @@ function renderNetworkingEvents() {
 
   // Filter networking events
   const networkingEvents = Array.from(activities.items)
-    .filter((activity) => {
+    .filter(activity => {
       // Filter by type
-      if (activity.type !== "networking") return false;
+      if (activity.type !== 'networking') return false;
 
       // Filter by status
-      if (statusFilter !== "all") {
-        if (
-          statusFilter === "upcoming" &&
-          (activity.completed || activity.cancelled)
-        )
-          return false;
-        if (statusFilter === "completed" && !activity.completed) return false;
-        if (statusFilter === "cancelled" && !activity.cancelled) return false;
+      if (statusFilter !== 'all') {
+        if (statusFilter === 'upcoming' && (activity.completed || activity.cancelled)) return false;
+        if (statusFilter === 'completed' && !activity.completed) return false;
+        if (statusFilter === 'cancelled' && !activity.cancelled) return false;
       }
 
       // Filter by networking type
-      if (typeFilter !== "all" && activity.format !== typeFilter) return false;
+      if (typeFilter !== 'all' && activity.format !== typeFilter) return false;
 
       return true;
     })
@@ -391,19 +380,19 @@ function renderNetworkingEvents() {
   }
 
   for (const event of networkingEvents) {
-    const networkingCard = document.createElement("div");
-    networkingCard.className = "networking-card";
+    const networkingCard = document.createElement('div');
+    networkingCard.className = 'networking-card';
     networkingCard.dataset.id = event.id;
 
-    let statusClass = "status-upcoming";
-    let statusText = "Upcoming";
+    let statusClass = 'status-upcoming';
+    let statusText = 'Upcoming';
 
     if (event.cancelled) {
-      statusClass = "status-cancelled";
-      statusText = "Cancelled";
+      statusClass = 'status-cancelled';
+      statusText = 'Cancelled';
     } else if (event.completed) {
-      statusClass = "status-completed";
-      statusText = "Completed";
+      statusClass = 'status-completed';
+      statusText = 'Completed';
     }
 
     networkingCard.innerHTML = `
@@ -415,19 +404,19 @@ function renderNetworkingEvents() {
         </div>
       </div>
       <div class="networking-body">
-        <p class="networking-description">${event.description || "No description provided."}</p>
+        <p class="networking-description">${event.description || 'No description provided.'}</p>
         <div class="networking-details">
           <span class="detail-label">Format:</span>
-          <span>${event.format || "Not specified"}</span>
+          <span>${event.format || 'Not specified'}</span>
           
           <span class="detail-label">Location:</span>
-          <span>${event.location || "Not specified"}</span>
+          <span>${event.location || 'Not specified'}</span>
           
           <span class="detail-label">Partners:</span>
-          <span>${event.partners || "None"}</span>
+          <span>${event.partners || 'None'}</span>
           
           <span class="detail-label">Capacity:</span>
-          <span>${event.capacity || "Unlimited"}</span>
+          <span>${event.capacity || 'Unlimited'}</span>
         </div>
       </div>
       <div class="networking-footer">
@@ -443,7 +432,7 @@ function renderNetworkingEvents() {
               <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
             </button>
           `
-              : ""
+              : ''
           }
           ${
             !event.cancelled
@@ -452,7 +441,7 @@ function renderNetworkingEvents() {
               <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
           `
-              : ""
+              : ''
           }
         </div>
       </div>
@@ -469,60 +458,46 @@ function renderAnalytics() {
   const endDate = DOM.analyticsDateEnd.value;
 
   // Render charts
-  ChartRenderer.renderActivityDistribution(
-    "activity-distribution-chart",
-    startDate,
-    endDate,
-  );
-  ChartRenderer.renderParticipantGrowth(
-    "participant-growth-chart",
-    startDate,
-    endDate,
-  );
-  ChartRenderer.renderCompletionRates(
-    "completion-rates-chart",
-    startDate,
-    endDate,
-  );
+  ChartRenderer.renderActivityDistribution('activity-distribution-chart', startDate, endDate);
+  ChartRenderer.renderParticipantGrowth('participant-growth-chart', startDate, endDate);
+  ChartRenderer.renderCompletionRates('completion-rates-chart', startDate, endDate);
 }
 
 // Switch view
 async function switchView(viewName) {
   // Hide all views
-  document.querySelectorAll(".view").forEach((view) => {
-    view.classList.remove("active");
+  document.querySelectorAll('.view').forEach(view => {
+    view.classList.remove('active');
   });
 
   // Show selected view
-  document.getElementById(`${viewName}-view`).classList.add("active");
+  document.getElementById(`${viewName}-view`).classList.add('active');
 
   // Update navigation
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.classList.remove("active");
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
   });
-  document
-    .querySelector(`.nav-item[data-view="${viewName}"]`)
-    .classList.add("active");
+  document.querySelector(`.nav-item[data-view="${viewName}"]`).classList.add('active');
 
   // Update current view
   currentView = viewName;
 
   // Render view content
   switch (viewName) {
-    case "dashboard":
+    case 'dashboard':
       await renderUpcomingActivities();
       await renderRecentActivities();
       break;
-    case "workshops":
+    case 'workshops':
       await renderWorkshops();
       break;
-    case "mentoring":
+    case 'mentoring':
       renderMentoringSessions();
       break;
-    case "networking":
+    case 'networking':
       renderNetworkingEvents();
       break;
-    case "analytics":
+    case 'analytics':
       renderAnalytics();
       break;
   }
@@ -539,102 +514,101 @@ function showActivityModal(activity = null) {
   form.reset();
 
   // Set today's date as default
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split('T')[0];
   DOM.activityDate.value = today;
 
   // Set default time
   const now = new Date();
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
   DOM.activityTime.value = `${hours}:${minutes}`;
 
   // Hide all type-specific fields
-  document.querySelectorAll(".activity-type-fields").forEach((field) => {
-    field.style.display = "none";
+  document.querySelectorAll('.activity-type-fields').forEach(field => {
+    field.style.display = 'none';
   });
 
   // If editing an existing activity
   if (activity) {
-    modalTitle.textContent = "Edit Activity";
+    modalTitle.textContent = 'Edit Activity';
 
     // Fill form with activity data
     activityType.value = activity.type;
     DOM.activityTitle.value = activity.title;
-    DOM.activityDescription.value = activity.description || "";
+    DOM.activityDescription.value = activity.description || '';
     DOM.activityDate.value = activity.date;
     DOM.activityTime.value = activity.time;
-    DOM.activityLocation.value = activity.location || "";
-    DOM.activityCapacity.value = activity.capacity || "";
+    DOM.activityLocation.value = activity.location || '';
+    DOM.activityCapacity.value = activity.capacity || '';
 
     // Fill type-specific fields
-    if (activity.type === "workshop") {
-      DOM.workshopPresenter.value = activity.presenter || "";
-      DOM.workshopMaterials.value = activity.materials || "";
-      document.getElementById("workshop-fields").style.display = "block";
-    } else if (activity.type === "mentoring") {
-      DOM.mentoringMentorInput.value = activity.mentor || "";
-      DOM.mentoringMentee.value = activity.mentee || "";
-      DOM.mentoringFocus.value = activity.focus || "";
-      document.getElementById("mentoring-fields").style.display = "block";
-    } else if (activity.type === "networking") {
-      DOM.networkingFormat.value = activity.format || "mixer";
-      DOM.networkingPartners.value = activity.partners || "";
-      document.getElementById("networking-fields").style.display = "block";
+    if (activity.type === 'workshop') {
+      DOM.workshopPresenter.value = activity.presenter || '';
+      DOM.workshopMaterials.value = activity.materials || '';
+      document.getElementById('workshop-fields').style.display = 'block';
+    } else if (activity.type === 'mentoring') {
+      DOM.mentoringMentorInput.value = activity.mentor || '';
+      DOM.mentoringMentee.value = activity.mentee || '';
+      DOM.mentoringFocus.value = activity.focus || '';
+      document.getElementById('mentoring-fields').style.display = 'block';
+    } else if (activity.type === 'networking') {
+      DOM.networkingFormat.value = activity.format || 'mixer';
+      DOM.networkingPartners.value = activity.partners || '';
+      document.getElementById('networking-fields').style.display = 'block';
     }
 
     // Store activity ID for update
     form.dataset.activityId = activity.id;
   } else {
-    modalTitle.textContent = "Add New Activity";
+    modalTitle.textContent = 'Add New Activity';
 
     // Show fields for default activity type
-    document.getElementById(`${activityType.value}-fields`).style.display =
-      "block";
+    document.getElementById(`${activityType.value}-fields`).style.display = 'block';
 
     // Clear activity ID
     delete form.dataset.activityId;
   }
 
   // Show modal
-  modal.style.display = "block";
+  modal.style.display = 'block';
 }
 
 // Initialize the application
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   // Create DOM references
-  DOM.upcomingList = document.getElementById("upcoming-list");
-  DOM.recentList = document.getElementById("recent-list");
-  DOM.workshopsGrid = document.getElementById("workshops-grid");
-  DOM.mentoringList = document.getElementById("mentoring-list");
-  DOM.networkingGrid = document.getElementById("networking-grid");
-  DOM.statusMessage = document.getElementById("status-message");
-  DOM.activityModal = document.getElementById("activity-modal");
-  DOM.modalTitle = document.getElementById("modal-title");
-  DOM.activityForm = document.getElementById("activity-form");
-  DOM.activityType = document.getElementById("activity-type");
-  DOM.activityTitle = document.getElementById("activity-title");
-  DOM.activityDescription = document.getElementById("activity-description");
-  DOM.activityDate = document.getElementById("activity-date");
-  DOM.activityTime = document.getElementById("activity-time");
-  DOM.activityLocation = document.getElementById("activity-location");
-  DOM.activityCapacity = document.getElementById("activity-capacity");
-  DOM.workshopPresenter = document.getElementById("workshop-presenter");
-  DOM.workshopMaterials = document.getElementById("workshop-materials");
-  DOM.mentoringMentorInput = document.getElementById("mentoring-mentor-input");
-  DOM.mentoringMentee = document.getElementById("mentoring-mentee");
-  DOM.mentoringFocus = document.getElementById("mentoring-focus");
-  DOM.networkingFormat = document.getElementById("networking-format");
-  DOM.networkingPartners = document.getElementById("networking-partners");
-  DOM.workshopStatus = document.getElementById("workshop-status");
-  DOM.workshopDateStart = document.getElementById("workshop-date-start");
-  DOM.workshopDateEnd = document.getElementById("workshop-date-end");
-  DOM.mentoringStatus = document.getElementById("mentoring-status");
-  DOM.mentoringMentor = document.getElementById("mentoring-mentor");
-  DOM.networkingStatus = document.getElementById("networking-status");
-  DOM.networkingType = document.getElementById("networking-type");
-  DOM.analyticsDateStart = document.getElementById("analytics-date-start");
-  DOM.analyticsDateEnd = document.getElementById("analytics-date-end");
-  DOM.syncBtn = document.getElementById("sync-btn");
+  DOM.upcomingList = document.getElementById('upcoming-list');
+  DOM.recentList = document.getElementById('recent-list');
+  DOM.workshopsGrid = document.getElementById('workshops-grid');
+  DOM.mentoringList = document.getElementById('mentoring-list');
+  DOM.networkingGrid = document.getElementById('networking-grid');
+  DOM.statusMessage = document.getElementById('status-message');
+  DOM.activityModal = document.getElementById('activity-modal');
+  DOM.modalTitle = document.getElementById('modal-title');
+  DOM.activityForm = document.getElementById('activity-form');
+  DOM.activityType = document.getElementById('activity-type');
+  DOM.activityTitle = document.getElementById('activity-title');
+  DOM.activityDescription = document.getElementById('activity-description');
+  DOM.activityDate = document.getElementById('activity-date');
+  DOM.activityTime = document.getElementById('activity-time');
+  DOM.activityLocation = document.getElementById('activity-location');
+  DOM.activityCapacity = document.getElementById('activity-capacity');
+  DOM.workshopPresenter = document.getElementById('workshop-presenter');
+  DOM.workshopMaterials = document.getElementById('workshop-materials');
+  DOM.mentoringMentorInput = document.getElementById('mentoring-mentor-input');
+  DOM.mentoringMentee = document.getElementById('mentoring-mentee');
+  DOM.mentoringFocus = document.getElementById('mentoring-focus');
+  DOM.networkingFormat = document.getElementById('networking-format');
+  DOM.networkingPartners = document.getElementById('networking-partners');
+  DOM.workshopStatus = document.getElementById('workshop-status');
+  DOM.workshopDateStart = document.getElementById('workshop-date-start');
+  DOM.workshopDateEnd = document.getElementById('workshop-date-end');
+  DOM.mentoringStatus = document.getElementById('mentoring-status');
+  DOM.mentoringMentor = document.getElementById('mentoring-mentor');
+  DOM.networkingStatus = document.getElementById('networking-status');
+  DOM.networkingType = document.getElementById('networking-type');
+  DOM.analyticsDateStart = document.getElementById('analytics-date-start');
+  DOM.analyticsDateEnd = document.getElementById('analytics-date-end');
+  DOM.syncBtn = document.getElementById('sync-btn');
 
   // Set default dates for filters
   const today = new Date();
@@ -643,8 +617,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const oneMonthLater = new Date();
   oneMonthLater.setMonth(today.getMonth() + 1);
 
-  const formatDateForInput = (date) => {
-    return date.toISOString().split("T")[0];
+  const formatDateForInput = date => {
+    return date.toISOString().split('T')[0];
   };
 
   DOM.workshopDateStart.value = formatDateForInput(oneMonthAgo);
@@ -653,121 +627,107 @@ document.addEventListener("DOMContentLoaded", () => {
   DOM.analyticsDateEnd.value = formatDateForInput(today);
 
   // Navigation event listeners
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.addEventListener("click", async () => {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', async () => {
       await switchView(item.dataset.view);
     });
   });
 
   // Add activity buttons
-  document.getElementById("add-activity-btn").addEventListener("click", () => {
+  document.getElementById('add-activity-btn').addEventListener('click', () => {
     showActivityModal();
   });
 
-  document.getElementById("add-workshop-btn").addEventListener("click", () => {
+  document.getElementById('add-workshop-btn').addEventListener('click', () => {
     const modal = showActivityModal();
-    DOM.activityType.value = "workshop";
-    document.querySelectorAll(".activity-type-fields").forEach((field) => {
-      field.style.display = "none";
+    DOM.activityType.value = 'workshop';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
     });
-    document.getElementById("workshop-fields").style.display = "block";
+    document.getElementById('workshop-fields').style.display = 'block';
   });
 
-  document.getElementById("add-mentoring-btn").addEventListener("click", () => {
+  document.getElementById('add-mentoring-btn').addEventListener('click', () => {
     const modal = showActivityModal();
-    DOM.activityType.value = "mentoring";
-    document.querySelectorAll(".activity-type-fields").forEach((field) => {
-      field.style.display = "none";
+    DOM.activityType.value = 'mentoring';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
     });
-    document.getElementById("mentoring-fields").style.display = "block";
+    document.getElementById('mentoring-fields').style.display = 'block';
   });
 
-  document
-    .getElementById("add-networking-btn")
-    .addEventListener("click", () => {
-      const modal = showActivityModal();
-      DOM.activityType.value = "networking";
-      document.querySelectorAll(".activity-type-fields").forEach((field) => {
-        field.style.display = "none";
-      });
-      document.getElementById("networking-fields").style.display = "block";
+  document.getElementById('add-networking-btn').addEventListener('click', () => {
+    const modal = showActivityModal();
+    DOM.activityType.value = 'networking';
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
     });
+    document.getElementById('networking-fields').style.display = 'block';
+  });
 
   // Activity type change
-  DOM.activityType.addEventListener("change", () => {
-    document.querySelectorAll(".activity-type-fields").forEach((field) => {
-      field.style.display = "none";
+  DOM.activityType.addEventListener('change', () => {
+    document.querySelectorAll('.activity-type-fields').forEach(field => {
+      field.style.display = 'none';
     });
-    document.getElementById(`${DOM.activityType.value}-fields`).style.display =
-      "block";
+    document.getElementById(`${DOM.activityType.value}-fields`).style.display = 'block';
   });
 
   // Close modal
-  document.querySelector(".close-modal").addEventListener("click", () => {
-    DOM.activityModal.style.display = "none";
+  document.querySelector('.close-modal').addEventListener('click', () => {
+    DOM.activityModal.style.display = 'none';
   });
 
-  document.querySelector(".cancel-btn").addEventListener("click", () => {
-    DOM.activityModal.style.display = "none";
+  document.querySelector('.cancel-btn').addEventListener('click', () => {
+    DOM.activityModal.style.display = 'none';
   });
 
   // Click outside modal to close
-  window.addEventListener("click", (event) => {
+  window.addEventListener('click', event => {
     if (event.target === DOM.activityModal) {
-      DOM.activityModal.style.display = "none";
+      DOM.activityModal.style.display = 'none';
     }
   });
 
   // Form submission
-  DOM.activityForm.addEventListener("submit", async (event) => {
+  DOM.activityForm.addEventListener('submit', async event => {
     event.preventDefault();
 
     const activityId = DOM.activityForm.dataset.activityId;
     const isEdit = !!activityId;
 
     // Create command
-    const cmd = new Command(
-      isEdit ? Commands.UPDATE : Commands.ADD,
-      isEdit ? [activityId] : [],
-    );
+    const cmd = new Command(isEdit ? Commands.UPDATE : Commands.ADD, isEdit ? [activityId] : []);
 
     // Execute command
     await CommandExecutor.execute(cmd);
 
     // Close modal
-    DOM.activityModal.style.display = "none";
+    DOM.activityModal.style.display = 'none';
 
     // Refresh current view to show updated data
     await switchView(currentView);
   });
 
   // Filter application
-  document
-    .getElementById("apply-workshop-filters")
-    .addEventListener("click", async () => {
-      await renderWorkshops();
-    });
+  document.getElementById('apply-workshop-filters').addEventListener('click', async () => {
+    await renderWorkshops();
+  });
 
-  document
-    .getElementById("apply-mentoring-filters")
-    .addEventListener("click", () => {
-      renderMentoringSessions();
-    });
+  document.getElementById('apply-mentoring-filters').addEventListener('click', () => {
+    renderMentoringSessions();
+  });
 
-  document
-    .getElementById("apply-networking-filters")
-    .addEventListener("click", () => {
-      renderNetworkingEvents();
-    });
+  document.getElementById('apply-networking-filters').addEventListener('click', () => {
+    renderNetworkingEvents();
+  });
 
-  document
-    .getElementById("apply-analytics-dates")
-    .addEventListener("click", () => {
-      renderAnalytics();
-    });
+  document.getElementById('apply-analytics-dates').addEventListener('click', () => {
+    renderAnalytics();
+  });
 
   // Sync button
-  DOM.syncBtn.addEventListener("click", async () => {
+  DOM.syncBtn.addEventListener('click', async () => {
     try {
       DOM.syncBtn.disabled = true;
       DOM.syncBtn.innerHTML = `
@@ -776,13 +736,13 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       await ApiService.syncActivities();
-      showStatus("Activities synchronized successfully");
+      showStatus('Activities synchronized successfully');
 
       // Refresh current view
       await switchView(currentView);
     } catch (error) {
-      showStatus("Failed to synchronize activities", true);
-      console.error("Sync error:", error);
+      showStatus('Failed to synchronize activities', true);
+      console.error('Sync error:', error);
     } finally {
       DOM.syncBtn.disabled = false;
       DOM.syncBtn.innerHTML = `
@@ -793,10 +753,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Activity list event delegation
-  document.addEventListener("click", async (event) => {
+  document.addEventListener('click', async event => {
     // Edit button
-    if (event.target.closest(".edit-btn")) {
-      const activityItem = event.target.closest("[data-id]");
+    if (event.target.closest('.edit-btn')) {
+      const activityItem = event.target.closest('[data-id]');
       if (activityItem) {
         const activityId = activityItem.dataset.id;
         const activity = ActivityList.getInstance().findById(activityId);
@@ -807,8 +767,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Complete button
-    if (event.target.closest(".complete-btn")) {
-      const activityItem = event.target.closest("[data-id]");
+    if (event.target.closest('.complete-btn')) {
+      const activityItem = event.target.closest('[data-id]');
       if (activityItem) {
         const activityId = activityItem.dataset.id;
         const cmd = new Command(Commands.COMPLETE, [activityId]);
@@ -818,8 +778,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Cancel button
-    if (event.target.closest(".cancel-btn")) {
-      const activityItem = event.target.closest("[data-id]");
+    if (event.target.closest('.cancel-btn')) {
+      const activityItem = event.target.closest('[data-id]');
       if (activityItem) {
         const activityId = activityItem.dataset.id;
         const cmd = new Command(Commands.CANCEL, [activityId]);
@@ -835,14 +795,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Then try to fetch from API
   ApiService.fetchActivities()
     .then(() => {
-      showStatus("Activities loaded from server");
+      showStatus('Activities loaded from server');
     })
-    .catch((error) => {
-      console.error("Error fetching activities:", error);
-      showStatus("Using locally stored activities", true);
+    .catch(error => {
+      console.error('Error fetching activities:', error);
+      showStatus('Using locally stored activities', true);
     })
     .finally(async () => {
       // Initialize view
-      await switchView("dashboard");
+      await switchView('dashboard');
     });
 });

@@ -15,7 +15,6 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
-    "format:staged": "prettier --write",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
     "logs": "mkdir -p logs"
   },
@@ -31,19 +30,19 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "express-validator": "^7.2.1",
-    "mongoose": "^7.5.0",
+    "mongoose": "^7.8.7",
     "morgan": "^1.10.0",
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "prettier": "^3.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^13.0.0"
+    "eslint": "^8.57.1",
+    "prettier": "^3.5.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.5.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0"
   },
   "engines": {
     "node": ">=18.0.0",
