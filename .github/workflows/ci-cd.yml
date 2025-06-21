@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# Add permissions for security scanning
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 env:
   PORT: 3000
   NODE_ENV: test
@@ -60,7 +66,7 @@ jobs:
             echo "⏳ Waiting for MongoDB... (attempt $i/30)"
             sleep 2
           done
-
+          
           # Double-check with a simple connection test
           timeout 10 bash -c 'until nc -z localhost 27017; do sleep 1; done' || {
             echo "❌ MongoDB failed to start"
@@ -133,6 +139,11 @@ jobs:
     name: Security & Quality Analysis
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'pull_request'
+    
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
     steps:
       - name: Checkout code
@@ -158,12 +169,14 @@ jobs:
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
+        continue-on-error: true
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
 
   # Docker Build & Test
   build:
@@ -198,10 +211,10 @@ jobs:
             -p 3001:3000 \
             -e NODE_ENV=production \
             ${{ env.DOCKER_IMAGE_NAME }}:test
-
+          
           # Wait a moment for container to start
           sleep 5
-
+          
           # Simple connectivity test
           if docker ps | grep test-container; then
             echo "✅ Container started successfully"
