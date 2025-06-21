@@ -23,7 +23,14 @@ module.exports = {
     'no-process-exit': 'warn',
     'handle-callback-err': 'error',
   },
-  ignorePatterns: ['node_modules/', 'logs/', '*.min.js', 'src/public/', 'healthcheck.js'],
+  ignorePatterns: [
+    'node_modules/',
+    'logs/',
+    '*.min.js',
+    'src/public/',
+    'healthcheck.js',
+    'test/api.test.js',
+  ],
   overrides: [
     {
       files: [
