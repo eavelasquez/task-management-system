@@ -7,11 +7,17 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "build": "echo \"No build step required for this project\"",
-    "test": "echo \"Tests will be implemented\" && exit 0",
-    "test:integration": "echo \"Integration tests will be implemented\" && exit 0",
-    "test:coverage": "echo \"Coverage tests will be implemented\" && exit 0",
+    "test": "npm run test:health && npm run test:lint",
+    "test:health": "node -e \"require('./healthcheck.js')\"",
+    "test:lint": "npm run lint",
+    "test:integration": "node -e \"console.log('Integration tests would run here'); process.exit(0)\"",
+    "test:coverage": "node -e \"console.log('Coverage report would be generated here'); process.exit(0)\"",
     "lint": "eslint src/ --max-warnings 20",
-    "format:check": "echo \"Prettier check will be implemented\" && exit 0",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
+    "format:staged": "prettier --write",
+    "prepare": "husky install",
     "logs": "mkdir -p logs"
   },
   "keywords": [
@@ -33,10 +39,24 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "eslint": "^8.48.0"
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.0"
   },
   "engines": {
     "node": ">=22.16.0",
     "npm": ">=11.4.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss,html}": [
+      "prettier --write"
+    ]
   }
 }
